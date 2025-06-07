@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "moduleResolution": "Node",
+        "strict": true,
+        "baseUrl": ".",
+        "paths": {
+            "@ui/*": [ "packages/ui/src/*" ],
+            "@utils/*": [ "packages/utils/src/*" ],
+            "@types/*": [ "packages/types/src/*" ],
+            "@sdk/*": [ "packages/sdk/src/*" ],
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}
