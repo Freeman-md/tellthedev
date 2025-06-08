@@ -37,7 +37,14 @@ const container = document.createElement('div')
 container.className = 'tellthedev-widget-container';
 
 const iframe = document.createElement('iframe')
-iframe.src = `https://tellthedev.vercel.app/widget/iframe.html?project_id=${projectId}`
+iframe.src = `https://tellthedev.vercel.app/widget/iframe.html`
+
+iframe.onload = () => {
+    iframe.contentWindow?.postMessage(
+        { type: 'tellthedev:init', projectId },
+        '*'
+    )
+}
 
 container.appendChild(iframe)
 
