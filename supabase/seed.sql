@@ -1,3 +1,7 @@
+insert into auth.users (id, email)
+values ('00000000-0000-0000-0000-000000000000', 'dev@example.com');
+
+
 insert into projects (id, user_id, name)
 values (
   gen_random_uuid(),
