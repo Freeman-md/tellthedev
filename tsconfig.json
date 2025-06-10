@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
-        "target": "esnext",
+        "target": "es6",
         "module": "esnext",
         "moduleResolution": "Node",
         "strict": true,
+        "lib": ["ES2015", "DOM"],
         "baseUrl": ".",
         "paths": {
             "@ui/*": [ "packages/ui/src/*" ],
