@@ -1,3 +1,5 @@
+declare const imageCompression: any;
+
 let projectId: string | null = null;
 let selectedType: 'bug' | 'feature' | 'general' | null = null;
 
@@ -41,7 +43,7 @@ function setupTypeSelector() {
 }
 
 function setupFormSubmit(form: HTMLFormElement) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         // if (!projectId) {
@@ -49,11 +51,11 @@ function setupFormSubmit(form: HTMLFormElement) {
         //     return;
         // }
 
-        handleFormSubmission(projectId!);
+        await handleFormSubmission(projectId!);
     });
 }
 
-function handleFormSubmission(projectId: string) {
+const handleFormSubmission = async (projectId: string) => { 
   console.log('[TellTheDev] Submitting feedback for project:', projectId);
   console.log('Selected type:', selectedType);
 
@@ -93,4 +95,12 @@ function handleFormSubmission(projectId: string) {
     console.warn('[TellTheDev] Form submission blocked due to validation errors.');
     return;
   }
+
+  const compressedImage = await imageCompression(image!, {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1280,
+    useWebWorker: true,
+  })
+
+  console.log(compressedImage)
 }
