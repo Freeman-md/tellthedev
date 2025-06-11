@@ -1,6 +1,0 @@
-{
-  "nodeModulesDir": "auto",
-  "test": {
-    "include": ["functions/tests/**/*.ts"]
-  }
-}
