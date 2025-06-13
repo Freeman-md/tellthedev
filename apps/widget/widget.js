@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+let _formState = 'idle';
 let projectId = null;
 let selectedType = null;
 window.addEventListener('message', (event) => {
@@ -25,6 +26,41 @@ document.addEventListener('DOMContentLoaded', () => {
     setupTypeSelector();
     setupFormSubmit(form);
 });
+const setFormState = (newState) => {
+    _formState = newState;
+    updateFormUI(newState);
+};
+const updateFormUI = (state) => {
+    const submitBtn = document.querySelector("button[type='submit']");
+    if (!submitBtn)
+        return;
+    switch (state) {
+        case 'idle':
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit feedback';
+            break;
+        case 'loading':
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            break;
+        case 'success':
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submitted ✅';
+            setTimeout(() => {
+                setFormState('idle');
+            }, 3000);
+            break;
+        case 'error':
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Try Again';
+            setTimeout(() => {
+                setFormState('idle');
+            }, 3000);
+            break;
+        default:
+            break;
+    }
+};
 function setupTypeSelector() {
     const typeButtons = document.querySelectorAll('[data-type]');
     typeButtons.forEach((btn) => {
@@ -52,46 +88,69 @@ function setupFormSubmit(form) {
 }
 const handleFormSubmission = (projectId) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
-    console.log('[TellTheDev] Submitting feedback for project:', projectId);
-    console.log('Selected type:', selectedType);
-    const messageEl = document.querySelector('textarea');
+    setFormState("loading");
+    const messageEl = document.querySelector("textarea");
     const imageEl = document.querySelector('input[type="file"]');
-    const messageErrorEl = document.getElementById('message-error');
-    const imageErrorEl = document.getElementById('image-error');
-    const typeErrorEl = document.getElementById('type-error');
+    const messageErrorEl = document.getElementById("message-error");
+    const imageErrorEl = document.getElementById("image-error");
+    const typeErrorEl = document.getElementById("type-error");
+    // Clear previous errors
+    if (messageErrorEl)
+        messageErrorEl.textContent = "";
+    if (imageErrorEl)
+        imageErrorEl.textContent = "";
+    if (typeErrorEl)
+        typeErrorEl.textContent = "";
     const message = messageEl === null || messageEl === void 0 ? void 0 : messageEl.value.trim();
     const image = (_b = (_a = imageEl.files) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : null;
-    // Clear all errors first
-    if (messageErrorEl)
-        messageErrorEl.textContent = '';
-    if (imageErrorEl)
-        imageErrorEl.textContent = '';
-    if (typeErrorEl)
-        typeErrorEl.textContent = '';
     let hasError = false;
     if (!message) {
         if (messageErrorEl)
-            messageErrorEl.textContent = 'Please enter a message';
-        hasError = true;
-    }
-    if (!image) {
-        if (imageErrorEl)
-            imageErrorEl.textContent = 'Please select an image';
+            messageErrorEl.textContent = "Please enter a message";
         hasError = true;
     }
     if (!selectedType) {
         if (typeErrorEl)
-            typeErrorEl.textContent = 'Please select a feedback type';
+            typeErrorEl.textContent = "Please select a feedback type";
         hasError = true;
     }
     if (hasError) {
-        console.warn('[TellTheDev] Form submission blocked due to validation errors.');
+        console.warn("[TellTheDev] Submission blocked due to validation errors.");
+        setFormState("idle");
         return;
     }
-    const compressedImage = yield imageCompression(image, {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1280,
-        useWebWorker: true,
-    });
-    console.log(compressedImage);
+    try {
+        const formData = new FormData();
+        formData.append("projectId", projectId);
+        formData.append("type", selectedType);
+        formData.append("message", message);
+        if (image) {
+            const compressedImage = yield imageCompression(image, {
+                maxSizeMB: 1,
+                maxWidthOrHeight: 1280,
+                useWebWorker: true,
+            });
+            formData.append("image", compressedImage, image.name);
+        }
+        const response = yield fetch("http://127.0.0.1:54321/functions/v1/submit-feedback", {
+            method: "POST",
+            body: formData,
+        });
+        const result = yield response.json();
+        if (!response.ok) {
+            console.error("[TellTheDev] Submission failed:", result);
+            setFormState("error");
+            return;
+        }
+        console.log("[TellTheDev] Submission successful:", result);
+        setFormState("success");
+        // TODO: reset form or show success message
+    }
+    catch (error) {
+        console.error("[TellTheDev] Submission error:", error);
+        setFormState("error");
+    }
+    finally {
+        setFormState("idle");
+    }
 });

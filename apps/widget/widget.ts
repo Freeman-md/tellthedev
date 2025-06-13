@@ -1,106 +1,171 @@
 declare const imageCompression: any;
 
+let _formState: 'idle' | 'loading' | 'success' | 'error' = 'idle'
 let projectId: string | null = null;
 let selectedType: 'bug' | 'feature' | 'general' | null = null;
 
 window.addEventListener('message', (event) => {
-    const { data } = event;
+  const { data } = event;
 
-    if (data?.type === 'tellthedev:init' && data?.projectId) {
-        projectId = data.projectId;
-        console.log('[TellTheDev] Widget initialized with project ID:', projectId);
-    }
+  if (data?.type === 'tellthedev:init' && data?.projectId) {
+    projectId = data.projectId;
+    console.log('[TellTheDev] Widget initialized with project ID:', projectId);
+  }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('[TellTheDev] Widget DOM loaded');
+  console.log('[TellTheDev] Widget DOM loaded');
 
-    const form = document.querySelector('form') as HTMLFormElement;
-    if (!form) return;
+  const form = document.querySelector('form') as HTMLFormElement;
+  if (!form) return;
 
-    setupTypeSelector();
-    setupFormSubmit(form);
+  setupTypeSelector();
+  setupFormSubmit(form);
 });
 
+const setFormState = (newState: typeof _formState) => {
+  _formState = newState
+  updateFormUI(newState)
+}
+
+const updateFormUI = (state: typeof _formState) => {
+  const submitBtn = document.querySelector("button[type='submit']") as HTMLButtonElement
+
+  if (!submitBtn) return;
+
+  switch (state) {
+    case 'idle':
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit feedback'
+      break;
+    case 'loading':
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...'
+      break;
+    case 'success':
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submitted ✅';
+      setTimeout(() => {
+        setFormState('idle')
+      }, 3000);
+      break;
+    case 'error':
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Try Again';
+      setTimeout(() => {
+        setFormState('idle')
+      }, 3000);
+      break;
+    default:
+      break;
+  }
+}
+
 function setupTypeSelector() {
-    const typeButtons = document.querySelectorAll('[data-type]') as NodeListOf<HTMLButtonElement>;
+  const typeButtons = document.querySelectorAll('[data-type]') as NodeListOf<HTMLButtonElement>;
 
-    typeButtons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const value = btn.getAttribute('data-type');
+  typeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const value = btn.getAttribute('data-type');
 
-            if (value === 'bug' || value === 'feature' || value === 'general') {
-                selectedType = value;
+      if (value === 'bug' || value === 'feature' || value === 'general') {
+        selectedType = value;
 
-                typeButtons.forEach((b) => {
-                    b.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-600');
-                });
-
-                btn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-600');
-            }
+        typeButtons.forEach((b) => {
+          b.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-600');
         });
+
+        btn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-600');
+      }
     });
+  });
 }
 
 function setupFormSubmit(form: HTMLFormElement) {
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-        // if (!projectId) {
-        //     alert('Widget is not initialized. No project ID.');
-        //     return;
-        // }
+    // if (!projectId) {
+    //     alert('Widget is not initialized. No project ID.');
+    //     return;
+    // }
 
-        await handleFormSubmission(projectId!);
-    });
+    await handleFormSubmission(projectId!);
+  });
 }
 
-const handleFormSubmission = async (projectId: string) => { 
-  console.log('[TellTheDev] Submitting feedback for project:', projectId);
-  console.log('Selected type:', selectedType);
+const handleFormSubmission = async (projectId: string) => {
+  setFormState("loading");
 
-  const messageEl = document.querySelector('textarea') as HTMLTextAreaElement;
+  const messageEl = document.querySelector("textarea") as HTMLTextAreaElement;
   const imageEl = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-  const messageErrorEl = document.getElementById('message-error');
-  const imageErrorEl = document.getElementById('image-error');
-  const typeErrorEl = document.getElementById('type-error');
+  const messageErrorEl = document.getElementById("message-error");
+  const imageErrorEl = document.getElementById("image-error");
+  const typeErrorEl = document.getElementById("type-error");
+
+  // Clear previous errors
+  if (messageErrorEl) messageErrorEl.textContent = "";
+  if (imageErrorEl) imageErrorEl.textContent = "";
+  if (typeErrorEl) typeErrorEl.textContent = "";
 
   const message = messageEl?.value.trim();
   const image = imageEl.files?.[0] ?? null;
 
-  // Clear all errors first
-  if (messageErrorEl) messageErrorEl.textContent = '';
-  if (imageErrorEl) imageErrorEl.textContent = '';
-  if (typeErrorEl) typeErrorEl.textContent = '';
-
   let hasError = false;
 
   if (!message) {
-    if (messageErrorEl) messageErrorEl.textContent = 'Please enter a message';
-    hasError = true;
-  }
-
-  if (!image) {
-    if (imageErrorEl) imageErrorEl.textContent = 'Please select an image';
+    if (messageErrorEl) messageErrorEl.textContent = "Please enter a message";
     hasError = true;
   }
 
   if (!selectedType) {
-    if (typeErrorEl) typeErrorEl.textContent = 'Please select a feedback type';
+    if (typeErrorEl) typeErrorEl.textContent = "Please select a feedback type";
     hasError = true;
   }
 
   if (hasError) {
-    console.warn('[TellTheDev] Form submission blocked due to validation errors.');
+    console.warn("[TellTheDev] Submission blocked due to validation errors.");
+    setFormState("idle");
     return;
   }
 
-  const compressedImage = await imageCompression(image!, {
-    maxSizeMB: 1,
-    maxWidthOrHeight: 1280,
-    useWebWorker: true,
-  })
+  try {
+    const formData = new FormData();
+    formData.append("projectId", projectId);
+    formData.append("type", selectedType!);
+    formData.append("message", message);
 
-  console.log(compressedImage)
-}
+    if (image) {
+      const compressedImage = await imageCompression(image, {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1280,
+        useWebWorker: true,
+      });
+      formData.append("image", compressedImage, image.name);
+    }
+
+    const response = await fetch("http://127.0.0.1:54321/functions/v1/submit-feedback", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      console.error("[TellTheDev] Submission failed:", result);
+      setFormState("error");
+      return;
+    }
+
+    console.log("[TellTheDev] Submission successful:", result);
+    setFormState("success");
+
+    // TODO: reset form or show success message
+  } catch (error) {
+    console.error("[TellTheDev] Submission error:", error);
+    setFormState("error");
+  } finally {
+    setFormState("idle");
+  }
+};

@@ -26,21 +26,69 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
 );
 
+// Static safe-list for dev/preview access
+const STATIC_ALLOWED_ORIGINS = [
+  "https://tellthedev.vercel.app",
+  "http://127.0.0.1:5500",
+];
+
 Deno.serve(async (req: Request): Promise<Response> => {
-  if (req.method === "OPTIONS") return new Response("ok", { status: 200 });
-  if (req.method !== "POST") return jsonResponse({ error: "Method not allowed" }, 405);
+  const origin = req.headers.get("origin") || "null";
+  const isStaticAllowed = STATIC_ALLOWED_ORIGINS.includes(origin);
+
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "content-type",
+    "Vary": "Origin",
+  };
+
+  console.log("[TellTheDev] METHOD:", req.method, "ORIGIN:", origin);
+
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { status: 200, headers: corsHeaders });
+  }
+
+  if (req.method !== "POST") {
+    return jsonResponse({ error: "Method not allowed" }, 405, corsHeaders);
+  }
 
   try {
     const formData = await req.formData();
+    const projectId = formData.get("projectId") as string | null;
+
+    const { data: project } = await supabase
+      .from("projects")
+      .select("allowed_origins")
+      .eq("id", projectId)
+      .maybeSingle();
+
+    const dynamicAllowedOrigin =
+      Array.isArray(project?.allowed_origins) &&
+        project.allowed_origins.includes(origin)
+        ? origin
+        : null;
+
+    const finalCorsOrigin = isStaticAllowed ? origin : dynamicAllowedOrigin;
+
+    if (!finalCorsOrigin) {
+      return jsonResponse(
+        { error: "Origin not allowed here" },
+        403,
+        corsHeaders
+      );
+    }
+
+
     const { values, errors } = extractAndValidateForm(formData);
 
     if (Object.keys(errors).length > 0) {
-      return jsonResponse({ error: "Validation failed", details: errors }, 400);
+      return jsonResponse({ error: "Validation failed", details: errors }, 400, corsHeaders);
     }
 
-    const projectExists = await checkProjectExists(values.projectId!);
+    const projectExists = !!project;
     if (!projectExists) {
-      return jsonResponse({ error: "Invalid project ID" }, 404);
+      return jsonResponse({ error: "Invalid project ID" }, 404, corsHeaders);
     }
 
     const imageUrl = values.image
@@ -52,18 +100,19 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return jsonResponse({
       message: "Feedback submitted successfully",
       imageUrl,
-    });
+    }, 200, corsHeaders);
+
   } catch (err: unknown) {
     return jsonResponse(
       {
         error: "Unhandled server error",
         details: err instanceof Error ? err.message : "Unknown failure",
       },
-      500
+      500,
+      corsHeaders
     );
   }
 });
-
 
 function extractAndValidateForm(formData: FormData): ValidationResult {
   const projectId = formData.get("projectId");
@@ -153,9 +202,12 @@ async function saveFeedback(
   }
 }
 
-function jsonResponse(data: JsonResponse, status: number = 200): Response {
+function jsonResponse(data: JsonResponse, status: number = 200, headers: HeadersInit = {}): Response {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...headers,
+    },
   });
 }
