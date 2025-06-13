@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 let _formState = 'idle';
-let projectId = null;
+let projectId = "8d62d581-6853-49be-b788-e317c297509e";
 let selectedType = null;
 window.addEventListener('message', (event) => {
     const { data } = event;
@@ -46,22 +46,26 @@ const updateFormUI = (state) => {
         case 'success':
             submitBtn.disabled = false;
             submitBtn.textContent = 'Submitted ✅';
-            setTimeout(() => {
-                setFormState('idle');
-            }, 3000);
             break;
         case 'error':
             submitBtn.disabled = false;
             submitBtn.textContent = 'Try Again';
-            setTimeout(() => {
-                setFormState('idle');
-            }, 3000);
             break;
         default:
             break;
     }
 };
-function setupTypeSelector() {
+const showErrorAlert = (message) => {
+    const alertEl = document.getElementById("form-error-alert");
+    if (!alertEl)
+        return;
+    alertEl.textContent = message;
+    alertEl.classList.remove("hidden");
+    setTimeout(() => {
+        alertEl.classList.add("hidden");
+    }, 4000);
+};
+const setupTypeSelector = () => {
     const typeButtons = document.querySelectorAll('[data-type]');
     typeButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -75,9 +79,9 @@ function setupTypeSelector() {
             }
         });
     });
-}
-function setupFormSubmit(form) {
-    form.addEventListener('submit', (e) => __awaiter(this, void 0, void 0, function* () {
+};
+const setupFormSubmit = (form) => {
+    form.addEventListener('submit', (e) => __awaiter(void 0, void 0, void 0, function* () {
         e.preventDefault();
         // if (!projectId) {
         //     alert('Widget is not initialized. No project ID.');
@@ -85,7 +89,7 @@ function setupFormSubmit(form) {
         // }
         yield handleFormSubmission(projectId);
     }));
-}
+};
 const handleFormSubmission = (projectId) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     setFormState("loading");
@@ -138,8 +142,8 @@ const handleFormSubmission = (projectId) => __awaiter(void 0, void 0, void 0, fu
         });
         const result = yield response.json();
         if (!response.ok) {
-            console.error("[TellTheDev] Submission failed:", result);
             setFormState("error");
+            showErrorAlert((result === null || result === void 0 ? void 0 : result.error) || "Something went wrong. Please try again.");
             return;
         }
         console.log("[TellTheDev] Submission successful:", result);
@@ -147,10 +151,15 @@ const handleFormSubmission = (projectId) => __awaiter(void 0, void 0, void 0, fu
         // TODO: reset form or show success message
     }
     catch (error) {
-        console.error("[TellTheDev] Submission error:", error);
+        console.log(error);
+        if (error instanceof Error) {
+            showErrorAlert(error.message || "Submission failed. Please try again.");
+        }
         setFormState("error");
     }
     finally {
-        setFormState("idle");
+        setTimeout(() => {
+            setFormState('idle');
+        }, 3000);
     }
 });

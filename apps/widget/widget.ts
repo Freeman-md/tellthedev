@@ -1,7 +1,7 @@
 declare const imageCompression: any;
 
 let _formState: 'idle' | 'loading' | 'success' | 'error' = 'idle'
-let projectId: string | null = null;
+let projectId: string | null = "8d62d581-6853-49be-b788-e317c297509e";
 let selectedType: 'bug' | 'feature' | 'general' | null = null;
 
 window.addEventListener('message', (event) => {
@@ -45,23 +45,30 @@ const updateFormUI = (state: typeof _formState) => {
     case 'success':
       submitBtn.disabled = false;
       submitBtn.textContent = 'Submitted ✅';
-      setTimeout(() => {
-        setFormState('idle')
-      }, 3000);
       break;
     case 'error':
       submitBtn.disabled = false;
       submitBtn.textContent = 'Try Again';
-      setTimeout(() => {
-        setFormState('idle')
-      }, 3000);
       break;
     default:
       break;
   }
 }
 
-function setupTypeSelector() {
+const showErrorAlert = (message: string) => {
+  const alertEl = document.getElementById("form-error-alert");
+  if (!alertEl) return;
+
+  alertEl.textContent = message;
+  alertEl.classList.remove("hidden");
+
+  setTimeout(() => {
+    alertEl.classList.add("hidden");
+  }, 4000);
+}
+
+
+const setupTypeSelector = () => {
   const typeButtons = document.querySelectorAll('[data-type]') as NodeListOf<HTMLButtonElement>;
 
   typeButtons.forEach((btn) => {
@@ -81,7 +88,7 @@ function setupTypeSelector() {
   });
 }
 
-function setupFormSubmit(form: HTMLFormElement) {
+const setupFormSubmit = (form: HTMLFormElement) => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -153,8 +160,9 @@ const handleFormSubmission = async (projectId: string) => {
     const result = await response.json();
 
     if (!response.ok) {
-      console.error("[TellTheDev] Submission failed:", result);
       setFormState("error");
+      showErrorAlert(result?.error || "Something went wrong. Please try again.");
+
       return;
     }
 
@@ -162,10 +170,16 @@ const handleFormSubmission = async (projectId: string) => {
     setFormState("success");
 
     // TODO: reset form or show success message
-  } catch (error) {
-    console.error("[TellTheDev] Submission error:", error);
+  } catch (error: unknown) {
+    console.log(error)
+    if (error instanceof Error ) {
+      showErrorAlert(error.message || "Submission failed. Please try again.");
+    }
+
     setFormState("error");
   } finally {
-    setFormState("idle");
+    setTimeout(() => {
+        setFormState('idle')
+      }, 3000);
   }
 };
