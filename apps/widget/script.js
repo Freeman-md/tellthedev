@@ -37,7 +37,7 @@ const container = document.createElement('div')
 container.className = 'tellthedev-widget-container';
 
 const iframe = document.createElement('iframe')
-iframe.src = `https://tellthedev.vercel.app/widget/iframe.html`
+iframe.src = `http://127.0.0.1:5500/apps/widget/iframe.html`
 
 iframe.onload = () => {
     iframe.contentWindow?.postMessage(
