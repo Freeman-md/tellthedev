@@ -94,7 +94,7 @@ Deno.test('Submit Feedback - missing fields (invalid input)', async () => {
     }
   });
 
-  let responseJson: any = data;
+  let responseJson = data;
 
   if (error && error.context?.text) {
     const raw = await error.context.text();
