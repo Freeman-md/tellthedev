@@ -5,7 +5,7 @@ if (!projectId) {
     console.warn('[TellTheDev] No project ID provided')
 }
 
-// Validate project before creating widget
+// Validate project immediately and store result globally
 const validateProject = async (projectId) => {
     try {
         const response = await fetch('http://127.0.0.1:54321/functions/v1/validate-project', {
@@ -28,18 +28,19 @@ const validateProject = async (projectId) => {
     }
 }
 
-// Initialize widget only if project is valid
 const initializeWidget = async () => {
     if (!projectId) {
         console.warn('[TellTheDev] No project ID provided')
+        window.TellTheDevProjectValid = false
         return
     }
 
     const isValid = await validateProject(projectId)
-    
+    window.TellTheDevProjectValid = isValid
+
     if (!isValid) {
         console.warn('[TellTheDev] Invalid project ID or project validation failed')
-        return
+        
     }
 
     const host = document.createElement('div')
@@ -52,7 +53,7 @@ const initializeWidget = async () => {
     styleTag.innerHTML = `
         .tellthedev-widget-container {
             position: fixed;
-            bottom: 20px;
+            bottom: 80px;
             right: 20px;
             width: 400px;
             height: auto;
@@ -101,6 +102,34 @@ const initializeWidget = async () => {
       .tellthedev-feedback-button:active {
         transform: translateY(0);
       }
+
+      .tellthedev-error-container {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 400px;
+        height: auto;
+        z-index: 9999;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        background: white;
+        display: none;
+        padding: 20px;
+        border: 1px solid #e5e7eb;
+      }
+
+      .tellthedev-error-container.show {
+        display: block;
+      }
+
+      .tellthedev-error-message {
+        color: #dc2626;
+        font-size: 14px;
+        line-height: 1.5;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+      }
     `
 
     // Create floating feedback button
@@ -123,11 +152,38 @@ const initializeWidget = async () => {
 
     // Add click event to toggle widget visibility
     feedbackButton.addEventListener('click', () => {
-        const isVisible = container.classList.contains('show')
-        if (isVisible) {
-            container.classList.remove('show')
+        if (window.TellTheDevProjectValid) {
+            // Show normal widget
+            const isVisible = container.classList.contains('show')
+            if (isVisible) {
+                container.classList.remove('show')
+            } else {
+                container.classList.add('show')
+            }
         } else {
-            container.classList.add('show')
+            // Show error message
+            console.log('[TellTheDev] Invalid or missing projectId. Widget not rendered.')
+            
+            // Create error container if it doesn't exist
+            let errorContainer = shadowRoot.querySelector('.tellthedev-error-container')
+            if (!errorContainer) {
+                errorContainer = document.createElement('div')
+                errorContainer.className = 'tellthedev-error-container'
+                
+                const errorMessage = document.createElement('p')
+                errorMessage.className = 'tellthedev-error-message'
+                errorMessage.textContent = '❌ Oops! This feedback widget wasn\'t set up properly. Invalid project ID. Please contact the site owner.'
+                
+                errorContainer.appendChild(errorMessage)
+                shadowRoot.appendChild(errorContainer)
+            }
+            
+            const isVisible = errorContainer.classList.contains('show')
+            if (isVisible) {
+                errorContainer.classList.remove('show')
+            } else {
+                errorContainer.classList.add('show')
+            }
         }
     })
 
