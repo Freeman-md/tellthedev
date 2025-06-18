@@ -24,7 +24,12 @@ styleTag.innerHTML = `
         border-radius: 8px;
         overflow: hidden;
         background: transparent;
+        display: none;
     }
+
+  .tellthedev-widget-container.show {
+    display: block;
+  }
 
   .tellthedev-widget-container iframe {
     width: 100%;
@@ -78,6 +83,16 @@ iframe.onload = () => {
         '*'
     )
 }
+
+// Add click event to toggle widget visibility
+feedbackButton.addEventListener('click', () => {
+    const isVisible = container.classList.contains('show')
+    if (isVisible) {
+        container.classList.remove('show')
+    } else {
+        container.classList.add('show')
+    }
+})
 
 container.appendChild(iframe)
 
