@@ -31,7 +31,40 @@ styleTag.innerHTML = `
     height: 400px;
     border: none;
   }
+
+  .tellthedev-feedback-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    transition: all 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .tellthedev-feedback-button:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  }
+
+  .tellthedev-feedback-button:active {
+    transform: translateY(0);
+  }
 `
+
+// Create floating feedback button
+const feedbackButton = document.createElement('button')
+feedbackButton.className = 'tellthedev-feedback-button'
+feedbackButton.textContent = 'Feedback'
 
 const container = document.createElement('div')
 container.className = 'tellthedev-widget-container';
@@ -49,4 +82,5 @@ iframe.onload = () => {
 container.appendChild(iframe)
 
 shadowRoot.appendChild(styleTag)
+shadowRoot.appendChild(feedbackButton)
 shadowRoot.appendChild(container)
