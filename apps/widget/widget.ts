@@ -92,10 +92,10 @@ const setupFormSubmit = (form: HTMLFormElement) => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // if (!projectId) {
-    //     alert('Widget is not initialized. No project ID.');
-    //     return;
-    // }
+    if (!projectId) {
+        alert('Widget is not initialized. No project ID.');
+        return;
+    }
 
     await handleFormSubmission(projectId!);
   });

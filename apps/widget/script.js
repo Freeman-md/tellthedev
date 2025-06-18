@@ -5,7 +5,6 @@ if (!projectId) {
     console.warn('[TellTheDev] No project ID provided')
 }
 
-// Validate project immediately and store result globally
 const validateProject = async (projectId) => {
     try {
         const response = await fetch('http://127.0.0.1:54321/functions/v1/validate-project', {
@@ -58,11 +57,12 @@ const initializeWidget = async () => {
             width: 400px;
             height: auto;
             z-index: 9999;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             border-radius: 8px;
             overflow: hidden;
-            background: transparent;
+            background: white;
             display: none;
+            padding: 0;
         }
 
       .tellthedev-widget-container.show {
@@ -71,8 +71,11 @@ const initializeWidget = async () => {
 
       .tellthedev-widget-container iframe {
         width: 100%;
-        height: 400px;
+        height: 100%;
         border: none;
+        display: block;
+        margin: 0;
+        padding: 0;
       }
 
       .tellthedev-feedback-button {
@@ -110,13 +113,12 @@ const initializeWidget = async () => {
         width: 400px;
         height: auto;
         z-index: 9999;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         border-radius: 8px;
         overflow: hidden;
         background: white;
         display: none;
-        padding: 20px;
-        border: 1px solid #e5e7eb;
+        padding: 16px;
       }
 
       .tellthedev-error-container.show {
@@ -132,7 +134,6 @@ const initializeWidget = async () => {
       }
     `
 
-    // Create floating feedback button
     const feedbackButton = document.createElement('button')
     feedbackButton.className = 'tellthedev-feedback-button'
     feedbackButton.textContent = 'Feedback'
@@ -143,6 +144,16 @@ const initializeWidget = async () => {
     const iframe = document.createElement('iframe')
     iframe.src = `http://127.0.0.1:5500/apps/widget/iframe.html`
 
+    window.addEventListener('message', (event) => {
+        if (event.data?.type === 'tellthedev:resize') {
+            container.style.height = `${event.data.height}px`;
+        }
+        if (event.data?.type === 'tellthedev:init' && event.data?.projectId) {
+            projectId = event.data.projectId;
+            console.log('[TellTheDev] Widget initialized with project ID:', projectId);
+        }
+    });
+
     iframe.onload = () => {
         iframe.contentWindow?.postMessage(
             { type: 'tellthedev:init', projectId },
@@ -150,10 +161,8 @@ const initializeWidget = async () => {
         )
     }
 
-    // Add click event to toggle widget visibility
     feedbackButton.addEventListener('click', () => {
         if (window.TellTheDevProjectValid) {
-            // Show normal widget
             const isVisible = container.classList.contains('show')
             if (isVisible) {
                 container.classList.remove('show')
@@ -161,10 +170,8 @@ const initializeWidget = async () => {
                 container.classList.add('show')
             }
         } else {
-            // Show error message
             console.log('[TellTheDev] Invalid or missing projectId. Widget not rendered.')
             
-            // Create error container if it doesn't exist
             let errorContainer = shadowRoot.querySelector('.tellthedev-error-container')
             if (!errorContainer) {
                 errorContainer = document.createElement('div')
@@ -194,5 +201,4 @@ const initializeWidget = async () => {
     shadowRoot.appendChild(container)
 }
 
-// Start the initialization process
 initializeWidget()
