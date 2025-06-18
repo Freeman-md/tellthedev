@@ -22,6 +22,9 @@ const client: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
 Deno.test('Validate Project - valid ID', async () => {
   const { data, error } = await client.functions.invoke('validate-project', {
     body: { projectId: testProjectId },
+     headers: {
+      "x-test-mode": "true",
+    }
   });
 
   if (error) {
@@ -37,6 +40,9 @@ Deno.test('Validate Project - valid ID', async () => {
 Deno.test('Validate Project - invalid ID format', async () => {
   const { data, error } = await client.functions.invoke('validate-project', {
     body: { projectId: 'invalid-id-123' },
+     headers: {
+      "x-test-mode": "true",
+    }
   });
 
   let response: any = data;
@@ -54,6 +60,9 @@ Deno.test('Validate Project - valid UUID but not found', async () => {
 
   const { data, error } = await client.functions.invoke('validate-project', {
     body: { projectId: fakeUuid },
+     headers: {
+      "x-test-mode": "true",
+    }
   });
 
   let response: any = data;
@@ -70,7 +79,10 @@ Deno.test('Validate Project - valid UUID but not found', async () => {
 
 Deno.test('Validate Project - missing ID', async () => {
   const { data, error } = await client.functions.invoke('validate-project', {
-    body: {}, // no projectId
+    body: {},
+     headers: {
+      "x-test-mode": "true",
+    }
   });
 
   let responseJson: any = data;
