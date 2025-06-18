@@ -151,16 +151,6 @@ function extractAndValidateForm(formData: FormData): ValidationResult {
   };
 }
 
-async function checkProjectExists(projectId: string): Promise<boolean> {
-  const { data, error } = await supabase
-    .from("projects")
-    .select("id")
-    .eq("id", projectId)
-    .maybeSingle();
-
-  return !!data && !error;
-}
-
 async function uploadImage(image: File): Promise<string> {
   const filename = `screenshots/${Date.now()}-${image.name}`;
 
