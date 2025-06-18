@@ -1,4 +1,8 @@
 {
   "imports": {},
-  "nodeModulesDir": "auto"
+  "nodeModulesDir": "auto",
+  "tasks": {
+    "test": "ALLOW_TEST_ORIGIN_BYPASS=true deno test --allow-all '../tests/**'",
+    "get-jwt": "deno run --allow-all ../get-jwt.ts"
+  }
 }

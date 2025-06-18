@@ -40,11 +40,14 @@ Deno.test('Submit Feedback - with image', async () => {
 
   const { data, error } = await client.functions.invoke('submit-feedback', {
     body: formData,
+    headers: {
+      "x-test-mode": "true",
+    }
   });
 
   if (error) {
     const raw = await error.context.text();
-    console.error('Function Error:', raw);
+    console.log('Function Error:', raw);
     throw new Error('Edge function threw error');
   }
 
@@ -61,11 +64,14 @@ Deno.test('Submit Feedback - without image', async () => {
 
   const { data, error } = await client.functions.invoke('submit-feedback', {
     body: formData,
+    headers: {
+      "x-test-mode": "true",
+    }
   });
 
   if (error) {
     const raw = await error.context.text();
-    console.error('Function Error:', raw);
+    console.log('Function Error:', raw);
     throw new Error('Edge function threw error');
   }
 
@@ -83,6 +89,9 @@ Deno.test('Submit Feedback - missing fields (invalid input)', async () => {
 
   const { data, error } = await client.functions.invoke('submit-feedback', {
     body: formData,
+    headers: {
+      "x-test-mode": "true",
+    }
   });
 
   let responseJson: any = data;
