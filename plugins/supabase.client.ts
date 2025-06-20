@@ -9,7 +9,7 @@ export default defineNuxtPlugin(() => {
         console.log('[Auth Change]', event, session)
 
         if (event === 'SIGNED_IN') {
-            router.push('/dashboard')
+            router.push('/')
         } else if (event === 'SIGNED_OUT') {
             router.push('/auth/login')
         }
