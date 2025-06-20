@@ -34,6 +34,11 @@ const { form, errors, isSubmitting, handleSubmit } = useLoginForm()
         :error="errors.password"
       />
 
+      <div class="flex justify-between">
+        <UCheckbox label="Remember me" />
+        <NuxtLink class="hover:underline text-primary" to="/auth/forgot-password">Forgot Password?</NuxtLink>
+      </div>
+
       <div class="mt-4 space-y-4">
         <UButton
           :loading="isSubmitting"
