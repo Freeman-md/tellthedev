@@ -1,22 +1,16 @@
 <template>
   <div class="grid grid-cols-4">
     <aside class="bg-white border-r border-gray-200 col-span-1 h-screen">
-      <div class="h-full flex flex-col p-4">
-        <div>
-          <NuxtLink to="/" class="text-xl font-bold">
-            <NuxtImg
-              src="/images/logo.svg"
-              width="120"
-              class="mb-10"
-              alt="Logo"
-            />
-          </NuxtLink>
-        </div>
-        <UNavigationMenu
-          orientation="vertical"
-          :items="items"
-          class="data-[orientation=vertical]"
-        />
+      <div class="h-full flex flex-col p-4 -space-y-4">
+        <NuxtLink to="/" class="text-xl font-bold">
+          <NuxtImg
+            src="/images/logo.svg"
+            width="120"
+            class="mb-10"
+            alt="Logo"
+          />
+        </NuxtLink>
+        <UNavigationMenu orientation="vertical" :items="items" />
       </div>
     </aside>
 
