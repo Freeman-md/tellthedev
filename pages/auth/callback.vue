@@ -8,7 +8,6 @@ onMounted(async () => {
   const { error } = await supabase.auth.exchangeCodeForSession(window.location.href)
 
   if (error) {
-    console.log(window.location)
     console.error('OAuth callback error:', error.message)
     return router.push('/auth/login')
   }
