@@ -69,7 +69,7 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
-import { definePageMeta } from '#imports';
+import { definePageMeta, useSupabaseClient, useToast } from '#imports';
 
 definePageMeta({
   layout: 'auth',
@@ -133,9 +133,14 @@ const handleSubmit = async () => {
       return;
     }
 
-    toast.add('✅ Account created. Check your inbox for verification.');
+    toast.add({
+      title: '✅ Account created. Check your inbox for verification.',
+    })
   } catch (err) {
-    console.error('Unexpected error:', err);
+    toast.add({
+      title: `Unexpected error: ${err}`,
+      color: 'error',
+    })
   } finally {
     isSubmitting.value = false;
   }

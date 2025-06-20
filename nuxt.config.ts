@@ -35,12 +35,7 @@ export default defineNuxtConfig({
   },
 
   ui: {
-    theme: {
-      colors: [
-        'neutral',
-        'primary'
-      ]
-    }
+    colorMode: false // TODO: add support for light and dark mode
   },
 
   imports: {

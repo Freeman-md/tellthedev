@@ -14,8 +14,6 @@
     --color-primary-800: #1e40af;
     --color-primary-900: #1e3a8a;
     --color-primary-950: #172554;
-
-    --color-neutral: black;
     
     --font-family-sans: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
     --font-family-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
@@ -30,6 +28,7 @@
 /* Global font application */
 html {
   font-family: var(--font-family-sans);
+  @apply !text-black;
 }
 
 @layer base {
