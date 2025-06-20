@@ -19,18 +19,18 @@ const { form, errors, isSubmitting, handleSubmit } = useLoginForm()
     <form id="form" class="space-y-6">
       <AuthInput
         id="email"
+        v-model="form.email"
         label="Email"
         type="email"
         placeholder="Email"
-        v-model="form.email"
         :error="errors.email"
       />
       <AuthInput
         id="password"
+        v-model="form.password"
         label="Password"
         type="password"
         placeholder="Password"
-        v-model="form.password"
         :error="errors.password"
       />
 

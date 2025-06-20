@@ -11,7 +11,11 @@
 </template>
 
 <script setup lang="ts">
-import { useSupabaseClient, useToast } from '#imports'
+import { definePageMeta, navigateTo, useSupabaseClient, useToast } from '#imports'
+
+definePageMeta({
+  middleware: ['auth']
+})
 
 const supabase = useSupabaseClient()
 const toast = useToast()
@@ -25,7 +29,7 @@ const handleLogout = async () => {
   }
 
   toast.add({ title: 'You’ve been logged out.' })
-  // Optionally redirect
-  // navigateTo('/auth/login')
+  
+  navigateTo('/auth/login')
 }
 </script>

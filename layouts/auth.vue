@@ -1,9 +1,9 @@
 <template>
     <div class="grid grid-cols-1 md:grid-cols-2 h-screen max-h-screen bg-gray-100 p-4 rounded-3xl shadow-lg">
         <main class="flex flex-col justify-between p-10 w-full max-w-xl mx-auto">
-            <div>
+            <NuxtLink to="/">
                 <NuxtImg src="/images/logo.svg" width="120" class="mb-10" alt="Logo" />
-            </div>
+            </NuxtLink>
 
             <slot></slot>
 

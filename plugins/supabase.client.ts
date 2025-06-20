@@ -1,17 +1,25 @@
-import { useSupabaseClient, useRouter, defineNuxtPlugin } from '#imports'
+import { useSupabaseClient, defineNuxtPlugin } from '#imports'
 import type { AuthChangeEvent, Session } from '@supabase/supabase-js'
 
 export default defineNuxtPlugin(() => {
-    const supabase = useSupabaseClient()
-    const router = useRouter()
+  const supabase = useSupabaseClient()
 
-    supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
-        console.log('[Auth Change]', event, session)
+  supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
+    console.log('[Auth Change]', event, session)
 
-        if (event === 'SIGNED_IN') {
-            router.push('/')
-        } else if (event === 'SIGNED_OUT') {
-            router.push('/auth/login')
-        }
-    })
+    const url = new URL(window.location.href)
+    const code = url.searchParams.get('code')
+    const isPasswordResetFlow = url.pathname === '/auth/reset-password' && code
+
+    if (event === 'SIGNED_IN') {
+      if (isPasswordResetFlow) {
+        console.log('[Password Recovery Flow Detected] Skipping redirect')
+        return
+      }
+    }
+
+    if (event === 'SIGNED_OUT') {
+      console.log('signed out')
+    }
+  })
 })
