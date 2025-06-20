@@ -62,7 +62,7 @@ const handleSubmit = async () => {
   const { error: supabaseError } = await supabase.auth.resetPasswordForEmail(
     email.value,
     {
-      redirectTo: "http://localhost:3000/auth/reset-password",
+      redirectTo: `${window.location.origin}/auth/reset-password`,
     }
   );
 

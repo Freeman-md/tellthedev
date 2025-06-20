@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { definePageMeta, useLoginForm } from '#imports'
-import AuthInput from '~/components/auth/AuthInput.vue'
+import AuthenticateWithGoogle from '~/components/auth/AuthenticateWithGoogle.vue';
 
 definePageMeta({
   layout: 'auth',
@@ -47,13 +47,8 @@ const { form, errors, isSubmitting, handleSubmit } = useLoginForm()
         >
           Sign in
         </UButton>
-        <UButton
-          icon="devicon:google"
-          color="neutral"
-          class="w-full justify-center border border-gray-200 cursor-pointer py-2"
-        >
-          Continue with Google
-        </UButton>
+
+        <AuthenticateWithGoogle />
       </div>
     </form>
 
