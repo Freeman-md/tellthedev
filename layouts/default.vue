@@ -1,25 +1,62 @@
 <template>
-  <div class="grid grid-cols-4">
-    <aside class="bg-white border-r border-gray-200 col-span-1 h-screen">
+  <div class="grid md:grid-cols-4">
+    <aside
+      :class="[
+        'bg-white border-r border-gray-200 h-screen fixed inset-y-0 z-40 transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:col-span-1',
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
+      ]"
+    >
       <div class="h-full flex flex-col p-4 -space-y-4">
         <NuxtLink to="/" class="text-xl font-bold">
           <NuxtImg
             src="/images/logo.svg"
             width="120"
-            class="mb-10"
+            class="mb-10 mt-1"
             alt="Logo"
           />
         </NuxtLink>
-        <UNavigationMenu orientation="vertical" :items="items" />
+        <UNavigationMenu orientation="vertical" :items="navigationItems" />
       </div>
     </aside>
 
+    <!-- Backdrop (mobile only) -->
+    <div
+      v-if="isSidebarOpen"
+      class="fixed inset-0 bg-black/30 z-30 md:hidden"
+      @click="toggleSidebar"
+    />
+
     <div class="flex flex-col flex-1 col-span-3">
       <header
-        class="h-16 border-b border-gray-200 px-6 flex items-center justify-between"
+        class="h-16 border-b border-gray-200 px-4 sm:px-6 flex items-center justify-between"
       >
-        <div class="text-sm font-medium text-gray-600">
-          Header (e.g. user avatar)
+        <div class="flex items-center space-x-2">
+          <button
+            class="md:hidden text-gray-700 hover:text-black focus:outline-none cursor-pointer mt-1"
+            @click="toggleSidebar"
+          >
+            <span class="sr-only">Toggle sidebar</span>
+            <UIcon name="cil:hamburger-menu" size="25" />
+          </button>
+
+          <USelectMenu
+            v-model="selectedProject"
+            :items="projects"
+            class="w-40"
+          />
+        </div>
+
+        <div class="flex space-x-2 items-center">
+          <UButton
+            icon="i-lucide-book"
+            variant="outline"
+            color="neutral"
+            to="https://docs.tellthedev.vercel.app"
+            target="_blank"
+            trailing-icon="i-lucide:arrow-up-right"
+            >Docs</UButton
+          >
+          <UAvatar alt="User Name" aria-setsize="md" />
         </div>
       </header>
 
@@ -39,7 +76,9 @@
 import type { NavigationMenuItem } from "@nuxt/ui";
 import { ref } from "vue";
 
-const items = ref<NavigationMenuItem[][]>([
+const isSidebarOpen = ref(false);
+
+const navigationItems = ref<NavigationMenuItem[][]>([
   [
     {
       label: "Dashboard",
@@ -159,4 +198,20 @@ const items = ref<NavigationMenuItem[][]>([
     },
   ],
 ]);
+
+const projects = ref(["TellTheDev", "Freemancodz", "FileTidy"]);
+
+const selectedProject = ref("TellTheDev");
+
+const toggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value;
+};
+
+watch(isSidebarOpen, (open) => {
+  if (open) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+})
 </script>
