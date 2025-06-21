@@ -1,9 +1,9 @@
 <template>
-  <div class="grid md:grid-cols-4">
+  <div class="flex flex-col md:flex-row h-screen">
     <aside
       :class="[
-        'bg-white border-r border-gray-200 h-screen fixed inset-y-0 z-40 transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:col-span-1',
-        isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
+        'bg-white border-r border-gray-200 w-auto max-md:min-w-1/2 md:w-1/4 h-full md:h-screen fixed md:relative z-40 transition-transform duration-300 ease-in-out',
+        isSidebarOpen ? 'max-md:translate-x-0' : 'max-md:-translate-x-full',
       ]"
     >
       <div class="h-full flex flex-col p-4 -space-y-4">
@@ -38,7 +38,7 @@
       />
     </Transition>
 
-    <div class="flex flex-col flex-1 md:col-span-3">
+    <div class="flex flex-col flex-1 overflow-y-auto">
       <section
         class="h-16 border-b border-gray-200 px-4 sm:px-6 flex items-center justify-between"
       >
