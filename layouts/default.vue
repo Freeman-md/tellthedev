@@ -7,7 +7,7 @@
       ]"
     >
       <div class="h-full flex flex-col p-4 -space-y-4">
-        <NuxtLink to="/" class="text-xl font-bold">
+        <NuxtLink to="/" class="text-xl font-bold md:block hidden">
           <NuxtImg
             src="/images/logo.svg"
             width="120"
@@ -15,35 +15,55 @@
             alt="Logo"
           />
         </NuxtLink>
+
+        <USelectMenu
+          v-model="selectedProject"
+          :items="projects"
+          :content="{
+            align: 'start',
+          }"
+          placeholder="Select project"
+          class="w-full block md:hidden mb-4"
+        />
+
         <UNavigationMenu orientation="vertical" :items="navigationItems" />
       </div>
     </aside>
 
     <Transition name="fade">
-    <div
-      v-if="isSidebarOpen"
-      class="fixed inset-0 bg-black/30 z-30 md:hidden transition"
-      @click="toggleSidebar"
-    />
+      <div
+        v-if="isSidebarOpen"
+        class="fixed inset-0 bg-black/30 z-30 md:hidden transition"
+        @click="toggleSidebar"
+      />
     </Transition>
 
-    <div class="flex flex-col flex-1 col-span-3">
-      <header
+    <div class="flex flex-col flex-1 md:col-span-3">
+      <section
         class="h-16 border-b border-gray-200 px-4 sm:px-6 flex items-center justify-between"
       >
         <div class="flex items-center space-x-2">
           <button
-            class="md:hidden text-gray-700 hover:text-black focus:outline-none cursor-pointer mt-1"
+            class="md:hidden text-gray-700 hover:text-black focus:outline-none cursor-pointer mt-3"
             @click="toggleSidebar"
           >
             <span class="sr-only">Toggle sidebar</span>
             <UIcon name="cil:hamburger-menu" size="25" />
           </button>
 
+          <NuxtLink to="/" class="text-xl font-bold md:hidden">
+            <NuxtImg
+              src="/images/logo.svg"
+              width="120"
+              alt="Logo"
+              class="mt-1"
+            />
+          </NuxtLink>
+
           <USelectMenu
             v-model="selectedProject"
             :items="projects"
-            class="w-40"
+            class="w-40 hidden md:block"
           />
         </div>
 
@@ -59,23 +79,23 @@
           >
           <UAvatar alt="User Name" aria-setsize="md" />
         </div>
-      </header>
+      </section>
 
       <main class="flex-1 p-6">
         <slot />
       </main>
 
       <!-- Footer -->
-      <footer class="text-center text-sm text-gray-400 py-4">
+      <section class="text-center text-sm text-gray-400 py-4">
         Built by <a href="" class="text-primary hover:underline">Freemancodz</a>
-      </footer>
+      </section>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
-import { ref, watch } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 
 const isSidebarOpen = ref(false);
 
@@ -208,13 +228,27 @@ const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
 };
 
+const handleKeydown = (e: KeyboardEvent) => {
+  if (e.key === "Escape" && isSidebarOpen.value) {
+    isSidebarOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeydown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeydown);
+});
+
 watch(isSidebarOpen, (open) => {
   if (open) {
-    document.body.style.overflow = 'hidden'
+    document.body.style.overflow = "hidden";
   } else {
-    document.body.style.overflow = ''
+    document.body.style.overflow = "";
   }
-})
+});
 </script>
 
 <style scoped>
