@@ -19,12 +19,13 @@
       </div>
     </aside>
 
-    <!-- Backdrop (mobile only) -->
+    <Transition name="fade">
     <div
       v-if="isSidebarOpen"
-      class="fixed inset-0 bg-black/30 z-30 md:hidden"
+      class="fixed inset-0 bg-black/30 z-30 md:hidden transition"
       @click="toggleSidebar"
     />
+    </Transition>
 
     <div class="flex flex-col flex-1 col-span-3">
       <header
@@ -74,7 +75,7 @@
 
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const isSidebarOpen = ref(false);
 
@@ -215,3 +216,14 @@ watch(isSidebarOpen, (open) => {
   }
 })
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
