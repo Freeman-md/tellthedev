@@ -77,7 +77,10 @@
             trailing-icon="i-lucide:arrow-up-right"
             >Docs</UButton
           >
-          <UAvatar alt="User Name" aria-setsize="md" />
+
+          <UDropdownMenu :items="dropdownItems">
+            <UAvatar alt="User Name" aria-setsize="md" />
+          </UDropdownMenu>
         </div>
       </section>
 
@@ -94,10 +97,13 @@
 </template>
 
 <script setup lang="ts">
-import type { NavigationMenuItem } from "@nuxt/ui";
+import { useLogout } from "#imports";
+import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui";
 import { onMounted, onUnmounted, ref, watch } from "vue";
 
 const isSidebarOpen = ref(false);
+
+const { logout } = useLogout()
 
 const navigationItems = ref<NavigationMenuItem[][]>([
   [
@@ -219,6 +225,19 @@ const navigationItems = ref<NavigationMenuItem[][]>([
     },
   ],
 ]);
+
+const dropdownItems = [
+  {
+    label: 'Profile',
+    icon: 'i-lucide-user-circle'
+  },
+  {
+    label: 'Logout',
+    icon: 'material-symbols:logout-rounded',
+    color: 'primary',
+    onSelect: logout
+  }
+] satisfies DropdownMenuItem[]
 
 const projects = ref(["TellTheDev", "Freemancodz", "FileTidy"]);
 
