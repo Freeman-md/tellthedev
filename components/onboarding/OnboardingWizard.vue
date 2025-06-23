@@ -22,25 +22,21 @@ const steps = ref<StepperItem[]>([
   {
     slot: "project-info" as const,
     title: "Project Info",
-    description: "Name and describe your project",
     icon: "i-lucide-folder-plus",
   },
   {
     slot: "allowed-origins" as const,
     title: "Allowed Origins",
-    description: "Add your allowed domain(s)",
     icon: "i-lucide-globe",
   },
   {
     slot: "widget-settings" as const,
     title: "Widget Settings",
-    description: "Configure look and behavior",
     icon: "i-lucide-sliders-horizontal",
   },
   {
     slot: "finish-setup" as const,
     title: "Finish Setup",
-    description: "Grab install code and preview",
     icon: "i-lucide-check-circle",
   },
 ]);
