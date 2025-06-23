@@ -3,6 +3,7 @@ import type { StepperItem } from "@nuxt/ui";
 import { ref, useTemplateRef } from "vue";
 import ProjectDetailsForm from "./steps/ProjectDetailsForm.vue";
 import AllowedOriginsForm from "./steps/AllowedOriginsForm.vue";
+import WidgetSettingsForm from "./steps/WidgetSettingsForm.vue";
 
 const formData = ref({
   project: {
@@ -50,7 +51,6 @@ const stepper = useTemplateRef<UStepperRef>("stepper");
 
 <template>
   <div class="w-full">
-
     <pre class="text-xs mt-4 text-gray-500">{{ formData }}</pre>
 
     <UStepper ref="stepper" v-model="activeStep" :items="steps" class="w-full">
@@ -73,8 +73,14 @@ const stepper = useTemplateRef<UStepperRef>("stepper");
       </template>
 
       <template #widget-settings>
-        <div class="aspect-video">This is for Widget Settings</div>
+        <div class="aspect-video">
+          <WidgetSettingsForm
+            v-model="formData"
+            :subtitle="'Configure your widget appearance and feedback behavior'"
+          />
+        </div>
       </template>
+
       <template #finish-setup>
         <div class="aspect-video">This is for Finish Setup</div>
       </template>
