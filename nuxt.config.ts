@@ -40,6 +40,7 @@ export default defineNuxtConfig({
 
   imports: {
     autoImport: true,
+    dirs: ['utils']
   },
 
   supabase: {

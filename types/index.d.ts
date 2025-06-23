@@ -17,4 +17,6 @@ declare global {
         confirmPassword: string;
     }
 
+    type FeedbackEntry = import('./feedback').FeedbackEntry;
+
 }

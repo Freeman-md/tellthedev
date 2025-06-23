@@ -1,55 +1,50 @@
-<template>
-  <BaseTable
-    :data="data.slice(0, 5)"
-    :columns="columns"
-    :show-column-toggles="true"
-    filter-column="email"
-    :pagination="false"
-  />
-</template>
-
 <script setup lang="ts">
-import BaseTable from '~/components/base/BaseTable.vue'
-import { h, resolveComponent } from 'vue'
-import type { TableColumn } from '@nuxt/ui'
+import { formatRelativeTime, useFeedback } from "#imports";
+import BaseTable from "../base/BaseTable.vue";
 
-const UBadge = resolveComponent('UBadge')
-
-defineProps<{
-  data: {
-    id: string
-    date: string
-    status: string
-    email: string
-    content: string
-  }[]
-}>()
-
-const columns: TableColumn[] = [
-  {
-    accessorKey: 'date',
-    header: 'Date',
-    cell: ({ row }) =>
-      new Date(row.getValue('date')).toLocaleDateString('en-US', {
-        day: 'numeric',
-        month: 'short'
-      })
-  },
-  {
-    accessorKey: 'email',
-    header: 'From'
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) =>
-      h(UBadge, { color: 'info', variant: 'subtle' }, () => row.getValue('status'))
-  },
-  {
-    accessorKey: 'content',
-    header: 'Summary',
-    cell: ({ row }) =>
-      h('div', { class: 'line-clamp-1 text-sm text-muted' }, row.getValue('content'))
-  }
-]
+const { data, headers } = useFeedback(2, [
+  "type",
+  "status",
+  "referrer_url",
+  "screenshot_url",
+  "sentiment",
+  "created_at",
+  "device_info",
+]);
 </script>
+
+<template>
+  <div class="bg-white dark:bg-muted rounded-lg border border-gray-100 p-4 w-full overflow-x-hidden">
+    <h3 class="text-lg font-semibold mb-4">Recent Feedback</h3>
+    <BaseTable :headers="headers">
+      <tbody class="divide-y divide-gray-200">
+        <tr
+          v-for="(feedback, index) in data"
+          :key="index"
+          class="*:py-4 *:pr-4"
+        >
+          <td>
+            <UBadge :label="feedback.type" variant="outline" color="neutral" />
+          </td>
+          <td>
+            <small>{{ feedback.referrer_url }}</small>
+          </td>
+          <td>
+            <code class="text-sm whitespace-nowrap">{{
+              feedback.device_info
+            }}</code>
+          </td>
+          <td>
+            <UBadge :label="feedback.sentiment" variant="soft" />
+          </td>
+          <td>
+            <NuxtImg :src="feedback.screenshot_url" :alt="index" />
+          </td>
+          <td>
+            {{ formatRelativeTime(feedback.created_at!) }}
+          </td>
+        </tr>
+      </tbody>
+    </BaseTable>
+  </div>
+</template>
