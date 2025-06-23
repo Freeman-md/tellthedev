@@ -15,7 +15,7 @@ const reloadPage = () => {
   <div>
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-semibold">Projects</h1>
-      <UButton to="/dashboard/projects/new" icon="i-lucide-plus">New Project</UButton>
+      <UButton to="/projects/create" icon="i-lucide-plus">New Project</UButton>
     </div>
 
     <LoadingSpinner v-if="pending" message="Loading your projects..." />
@@ -31,7 +31,7 @@ const reloadPage = () => {
     </div>
 
     <EmptyState v-else message="You haven’t created any projects yet.">
-      <UButton to="/dashboard/projects/new" icon="i-lucide-plus">Create Project</UButton>
+      <UButton to="/projects/create" icon="i-lucide-plus">Create Project</UButton>
     </EmptyState>
   </div>
 </template>
