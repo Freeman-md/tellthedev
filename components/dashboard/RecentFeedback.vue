@@ -11,7 +11,7 @@ const searchTerms: Array<keyof FeedbackEntry> = [
   'referrer_url',
 ];
 
-const { data, headers } = useFeedback(5, [
+const { data, headers, pending, error } = useFeedback(5, [
   'type',
   'referrer_url',
   'device_info',
@@ -30,6 +30,9 @@ const { data, headers } = useFeedback(5, [
       :data="data as Record<string, unknown>[]"
       :searchable-fields="searchTerms"
       :enable-search="true"
+      :loading="pending"
+      :error="error"
+      empty-message="No feedback entries available."
     >
       <template #default="{ rows }">
         <tr

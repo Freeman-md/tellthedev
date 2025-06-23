@@ -79,10 +79,16 @@ export const useFeedback = (limit: number = 10, fields?: Array<keyof FeedbackEnt
       : []
   );
 
+  // for now
+  const pending = false;
+  const error = null;
+
 
   return {
     data,
     latest,
     headers,
+    pending,
+    error
   };
 };

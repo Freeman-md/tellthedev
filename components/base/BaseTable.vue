@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { defineShortcuts } from '#imports';
 import { computed, ref, watch, type ComponentPublicInstance } from 'vue';
+import LoadingSpinner from '../ui/LoadingSpinner.vue';
+import ErrorState from '../ui/ErrorState.vue';
+import EmptyState from '../ui/EmptyState.vue';
 
 const props = defineProps<{
   headers: string[];
   data: Record<string, unknown>[];
   searchableFields?: string[];
   enableSearch?: boolean;
+    loading?: boolean;
+  error?: string | null;
+  emptyMessage?: string;
 }>();
 
 const emit = defineEmits<{
@@ -45,7 +51,7 @@ watch(searchText, (val) => emit('search', val));
         ref="searchInputRef"
         v-model="searchText"
         icon="i-lucide-search"
-        placeholder="Search..."
+        placeholder="Search by..."
         :ui="{ leading: 'pointer-events-none' }"
       >
         <template #trailing>
@@ -56,8 +62,11 @@ watch(searchText, (val) => emit('search', val));
       <USelectMenu v-model="searchTerm" :items="searchableFields" class="w-40" />
     </div>
 
-    <!-- Table -->
-    <div class="overflow-x-auto">
+    <LoadingSpinner v-if="loading" message="Loading..." />
+    <ErrorState v-else-if="error" :message="error" />
+    <EmptyState v-else-if="!filteredData.length" :message="emptyMessage || 'No data found.'" />
+
+    <div v-else class="overflow-x-auto">
       <table class="table-auto w-full">
         <thead>
           <tr>
