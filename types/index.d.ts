@@ -19,4 +19,6 @@ declare global {
 
     type FeedbackEntry = import('./feedback').FeedbackEntry;
 
+    type Project = import('./project').Project;
+
 }

@@ -1,7 +1,14 @@
 <script setup lang="ts">
+import EmptyState from '~/components/ui/EmptyState.vue';
+import ErrorState from '~/components/ui/ErrorState.vue';
+import LoadingSpinner from '~/components/ui/LoadingSpinner.vue';
 import { useProjects } from '~/composables/useProjects';
 
-const { projects, pending } = useProjects();
+const { projects, pending, error } = useProjects();
+
+const reloadPage = () => {
+  window.location.reload();
+}
 </script>
 
 <template>
@@ -11,9 +18,11 @@ const { projects, pending } = useProjects();
       <UButton to="/dashboard/projects/new" icon="i-lucide-plus">New Project</UButton>
     </div>
 
-    <div v-if="pending">
-      <p class="text-gray-400">Loading projects...</p>
-    </div>
+    <LoadingSpinner v-if="pending" message="Loading your projects..." />
+
+    <ErrorState v-else-if="error" message="Something went wrong while loading projects.">
+      <UButton @click="reloadPage" icon="i-lucide-refresh-ccw">Try Again</UButton>
+    </ErrorState>
 
     <div v-else-if="projects?.length">
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -21,9 +30,8 @@ const { projects, pending } = useProjects();
       </div>
     </div>
 
-    <div v-else class="text-center py-12">
-      <p class="text-gray-500 mb-4">You haven’t created any projects yet.</p>
+    <EmptyState v-else message="You haven’t created any projects yet.">
       <UButton to="/dashboard/projects/new" icon="i-lucide-plus">Create Project</UButton>
-    </div>
+    </EmptyState>
   </div>
 </template>

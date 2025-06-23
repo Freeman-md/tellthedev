@@ -4,7 +4,7 @@ import { ref, useSupabaseClient, useSupabaseUser, useAsyncData } from '#imports'
 export const useProjects = () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
-  const projects = ref([]);
+  const projects = ref<Project[]>([]);
 
   const { data, pending, error, refresh } = useAsyncData(
     'user-projects',
@@ -18,7 +18,7 @@ export const useProjects = () => {
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
-      return data;
+      return data as Project[];
     },
     {
       server: false,
@@ -26,7 +26,7 @@ export const useProjects = () => {
     }
   );
 
-  projects.value = data;
+  projects.value = data.value || [];
 
   return {
     projects,
