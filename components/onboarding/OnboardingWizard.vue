@@ -2,6 +2,7 @@
 import type { StepperItem } from "@nuxt/ui";
 import { ref, useTemplateRef } from "vue";
 import ProjectDetailsForm from "./steps/ProjectDetailsForm.vue";
+import AllowedOriginsForm from "./steps/AllowedOriginsForm.vue";
 
 const formData = ref({
   project: {
@@ -49,6 +50,9 @@ const stepper = useTemplateRef<UStepperRef>("stepper");
 
 <template>
   <div class="w-full">
+
+    <pre class="text-xs mt-4 text-gray-500">{{ formData }}</pre>
+
     <UStepper ref="stepper" v-model="activeStep" :items="steps" class="w-full">
       <template #project-info>
         <div class="aspect-video">
@@ -58,9 +62,16 @@ const stepper = useTemplateRef<UStepperRef>("stepper");
           />
         </div>
       </template>
+
       <template #allowed-origins>
-        <div class="aspect-video">This is for Allowed Origins</div>
+        <div class="aspect-video">
+          <AllowedOriginsForm
+            v-model="formData"
+            :subtitle="'Specify the domains where your widget is allowed to run'"
+          />
+        </div>
       </template>
+
       <template #widget-settings>
         <div class="aspect-video">This is for Widget Settings</div>
       </template>
