@@ -21,4 +21,11 @@ declare global {
 
     type Project = import('./project').Project;
 
+    type UStepperRef = {
+        hasNext: boolean,
+        hasPrev: boolean,
+        next: () => void,
+        prev: () => void
+    }
+
 }

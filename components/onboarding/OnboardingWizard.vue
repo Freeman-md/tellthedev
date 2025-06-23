@@ -43,12 +43,7 @@ const steps = ref<StepperItem[]>([
 
 const activeStep = ref(0)
 
-const stepper = useTemplateRef<{
-    hasNext: boolean,
-    hasPrev: boolean,
-    next: () => void,
-    prev: () => void
-}>("stepper");
+const stepper = useTemplateRef<UStepperRef>("stepper");
 </script>
 
 <template>
