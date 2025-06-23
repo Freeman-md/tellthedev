@@ -11,7 +11,7 @@
 
     <!-- Main Grid -->
     <section class="grid lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-2 space-y-6">
+      <div class="lg:col-span-2 space-y-6 overflow-hidden">
         <FeedbackDonut />
         <RecentFeedback />
       </div>

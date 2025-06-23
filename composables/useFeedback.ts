@@ -52,17 +52,19 @@ export const useFeedback = (limit: number = 10, fields?: Array<keyof FeedbackEnt
     },
   ];
 
-  const data = computed<Partial<FeedbackEntry>[]>(() => {
+  const data = computed(() => {
     return dummy
       .slice(0, limit)
       .map((item) =>
         fields
-          ? Object.fromEntries(
-            Object.entries(item).filter(([key]) => fields.includes(key as keyof FeedbackEntry))
-          )
+          ? fields.reduce<Record<string, unknown>>((obj, key) => {
+            obj[key] = item[key];
+            return obj;
+          }, {})
           : item
       );
   });
+
 
   const latest = computed(() => data.value[0]);
 
@@ -76,7 +78,6 @@ export const useFeedback = (limit: number = 10, fields?: Array<keyof FeedbackEnt
         })
       : []
   );
-
 
 
   return {
