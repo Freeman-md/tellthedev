@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { StepperItem } from "@nuxt/ui";
 import { ref, useTemplateRef } from "vue";
+import ProjectDetailsForm from "./steps/ProjectDetailsForm.vue";
 
 const formData = ref({
   project: {
@@ -41,33 +42,31 @@ const steps = ref<StepperItem[]>([
   },
 ]);
 
-const activeStep = ref(0)
+const activeStep = ref(0);
 
 const stepper = useTemplateRef<UStepperRef>("stepper");
 </script>
 
 <template>
   <div class="w-full">
-    <UStepper
-      ref="stepper"
-      v-model="activeStep"
-      :items="steps"
-      class="w-full"
-    >
-
-    <template #project-info>
-      <div class="aspect-video">This is for Project Info</div>
-    </template>
-    <template #allowed-origins>
-      <div class="aspect-video">This is for Allowed Origins</div>
-    </template>
-    <template #widget-settings>
-      <div class="aspect-video">This is for Widget Settings</div>
-    </template>
-    <template #finish-setup>
-      <div class="aspect-video">This is for Finish Setup</div>
-    </template>
-
+    <UStepper ref="stepper" v-model="activeStep" :items="steps" class="w-full">
+      <template #project-info>
+        <div class="aspect-video">
+          <ProjectDetailsForm
+            v-model="formData"
+            :subtitle="'Add details about your project to get started'"
+          />
+        </div>
+      </template>
+      <template #allowed-origins>
+        <div class="aspect-video">This is for Allowed Origins</div>
+      </template>
+      <template #widget-settings>
+        <div class="aspect-video">This is for Widget Settings</div>
+      </template>
+      <template #finish-setup>
+        <div class="aspect-video">This is for Finish Setup</div>
+      </template>
     </UStepper>
 
     <div class="flex gap-2 justify-between mt-4">
