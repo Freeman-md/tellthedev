@@ -42,16 +42,6 @@ const { copy, copied } = useClipboard({ source: embedSnippet })
           </template>
         </UTextarea>
       </UFormField>
-
-      <div class="flex gap-2">
-        <UButton icon="i-lucide-eye" color="gray" variant="outline">
-          Preview Widget
-        </UButton>
-
-        <UButton icon="i-lucide-check-circle" color="primary">
-          Go to Dashboard
-        </UButton>
-      </div>
     </div>
   </div>
 </template>

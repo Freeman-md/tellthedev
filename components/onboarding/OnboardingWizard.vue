@@ -4,7 +4,7 @@ import { computed, ref, useTemplateRef } from "vue";
 import ProjectDetailsForm from "./steps/ProjectDetailsForm.vue";
 import AllowedOriginsForm from "./steps/AllowedOriginsForm.vue";
 import WidgetSettingsForm from "./steps/WidgetSettingsForm.vue";
-import InstallInstructions from "./steps/InstallInstructions.vue";
+import InstallationInstructions from "./steps/InstallationInstructions.vue";
 import { navigateTo, useProjects, useToast } from "#imports";
 
 const isCreating = ref(false);
@@ -160,6 +160,35 @@ const handleCreateProject = async () => {
     isCreating.value = false;
   }
 };
+
+const previewWidget = () =>
+  window.open(
+    `https://widget-preview.tellthedev.com/${projectCreated.value?.api_key}`,
+    "_blank"
+  );
+
+const resetWizard = () => {
+  formData.value = {
+    project: {
+      name: "",
+      description: "",
+      slug: "",
+    },
+    origins: [],
+    widgetSettings: {
+      theme: "system",
+      position: "bottom-right",
+      allowScreenshot: true,
+      allowEmail: false,
+      defaultTypes: ["bug", "idea"],
+    },
+  };
+
+  projectCreated.value = null;
+  activeStep.value = 0;
+
+  stepRefs.forEach((ref) => ref.value?.reset?.());
+};
 </script>
 
 <template>
@@ -202,14 +231,35 @@ const handleCreateProject = async () => {
       </template>
 
       <template #finish-setup>
-        <div class="aspect-video">
-          <InstallInstructions
+        <div class="aspect-video flex flex-col justify-between gap-6">
+          <InstallationInstructions
             :project="{
               slug: projectCreated?.slug!,
               api_key: projectCreated?.api_key!,
             }"
             :subtitle="'Copy the embed script and launch your widget'"
           />
+
+          <div class="flex justify-between gap-2 mt-4">
+            <UButton
+              variant="outline"
+              icon="i-lucide-arrow-left"
+              @click="resetWizard"
+            >
+              Create Another Project
+            </UButton>
+
+            <UButton
+              icon="i-lucide-external-link"
+              @click="navigateTo(`/projects/${projectCreated?.slug}`)"
+            >
+              Go to Project Dashboard
+            </UButton>
+
+            <UButton variant="solid" icon="i-lucide-eye" @click="previewWidget">
+              Preview Widget
+            </UButton>
+          </div>
         </div>
       </template>
     </UStepper>
