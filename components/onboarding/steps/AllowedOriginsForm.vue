@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import type { FormError } from '@nuxt/ui'
 
 const modelValue = defineModel<{
   origins: string[];
@@ -9,6 +10,7 @@ defineProps<{
   subtitle?: string;
 }>();
 
+const formRef = ref()
 const origins = computed(() => modelValue.value!.origins);
 const input = ref("");
 
@@ -22,6 +24,19 @@ function addOrigin() {
 function removeOrigin(index: number) {
   origins.value.splice(index, 1);
 }
+
+const validate = async () => {
+  const errors: FormError[] = []
+
+  if (origins.value.length === 0) {
+    errors.push({ name: 'origins', message: 'At least one domain is required' })
+  }
+
+  formRef.value?.setErrors(errors)
+  return errors.length === 0
+}
+
+defineExpose({ validate })
 </script>
 
 <template>
@@ -31,9 +46,10 @@ function removeOrigin(index: number) {
       <p v-if="subtitle" class="text-gray-500 mt-1">{{ subtitle }}</p>
     </div>
 
-    <UForm :state="origins" class="space-y-4">
+    <UForm ref="formRef" :state="origins" class="space-y-4">
       <UFormField
         label="Domain"
+        name="origins"
         description="Enter a domain and press enter or click add"
       >
         <div class="flex items-center gap-2">

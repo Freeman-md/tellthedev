@@ -47,23 +47,18 @@ const steps = ref<StepperItem[]>([
 
 const activeStep = ref(0);
 
-const stepRefs = [
-  ref(),
-  ref(),
-  ref(),
-  ref()
-]
+const stepRefs = [ref(), ref(), ref(), ref()];
 
 const stepper = useTemplateRef<UStepperRef>("stepper");
 
 const handleNext = async () => {
-  const current = stepRefs[activeStep.value]?.value
-  const valid = await current?.validate?.()
+  const current = stepRefs[activeStep.value]?.value;
+  const valid = await current?.validate?.();
 
-  if (!valid) return
+  if (!valid) return;
 
-  stepper.value?.next()
-}
+  stepper.value?.next();
+};
 </script>
 
 <template>
@@ -89,6 +84,7 @@ const handleNext = async () => {
       <template #allowed-origins>
         <div class="aspect-video">
           <AllowedOriginsForm
+            :ref="stepRefs[1]"
             v-model="formData"
             :subtitle="'Specify the domains where your widget is allowed to run'"
           />
