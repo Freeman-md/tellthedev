@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import type { FormError } from '@nuxt/ui'
+import type { FormError } from "@nuxt/ui";
 
 const modelValue = defineModel<{
   origins: string[];
@@ -10,33 +10,55 @@ defineProps<{
   subtitle?: string;
 }>();
 
-const formRef = ref()
+const formRef = ref();
 const origins = computed(() => modelValue.value!.origins);
 const input = ref("");
 
 function addOrigin() {
-  const value = input.value.trim();
-  if (!value || origins.value.includes(value)) return;
-  origins.value.push(value);
-  input.value = "";
+  let value = input.value.trim().toLowerCase()
+
+  value = value.replace(/^https?:\/\//, '')
+
+  const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/;
+
+  if (!value || origins.value.includes(`https://${value}`)) return;
+
+  if (!domainRegex.test(value)) {
+    formRef.value?.setErrors([
+      {
+        name: 'origins',
+        message: 'Please enter a valid domain (e.g. mysite.com)',
+      }
+    ])
+    return
+  }
+
+  formRef.value?.setErrors([])
+
+  origins.value.push(`https://${value}`)
+  input.value = ''
 }
+
 
 function removeOrigin(index: number) {
   origins.value.splice(index, 1);
 }
 
 const validate = async () => {
-  const errors: FormError[] = []
+  const errors: FormError[] = [];
 
   if (origins.value.length === 0) {
-    errors.push({ name: 'origins', message: 'At least one domain is required' })
+    errors.push({
+      name: "origins",
+      message: "At least one domain is required",
+    });
   }
 
-  formRef.value?.setErrors(errors)
-  return errors.length === 0
-}
+  formRef.value?.setErrors(errors);
+  return errors.length === 0;
+};
 
-defineExpose({ validate })
+defineExpose({ validate });
 </script>
 
 <template>
@@ -55,10 +77,18 @@ defineExpose({ validate })
         <div class="flex items-center gap-2">
           <UInput
             v-model="input"
-            placeholder="e.g. myapp.com"
+            placeholder="myapp.com"
             class="flex-1"
+            :ui="{
+              base: 'pl-14.5',
+              leading: 'pointer-events-none',
+            }"
             @keydown.enter.prevent="addOrigin"
-          />
+          >
+            <template #leading>
+              <p class="text-sm text-muted">https://</p>
+            </template>
+          </UInput>
           <UButton size="sm" @click="addOrigin">Add</UButton>
         </div>
       </UFormField>
@@ -68,7 +98,6 @@ defineExpose({ validate })
           v-for="(origin, index) in origins"
           :key="origin"
           :label="origin"
-          
           variant="subtle"
           size="lg"
           trailing
