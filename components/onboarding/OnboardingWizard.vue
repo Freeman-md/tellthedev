@@ -94,6 +94,7 @@ const handleNext = async () => {
       <template #widget-settings>
         <div class="aspect-video">
           <WidgetSettingsForm
+            :ref="stepRefs[2]"
             v-model="formData"
             :subtitle="'Configure your widget appearance and feedback behavior'"
           />
