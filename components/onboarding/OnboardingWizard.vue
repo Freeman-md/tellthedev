@@ -13,10 +13,8 @@ const projectCreated = ref<Project | null>(null);
 const { addProject } = useProjects();
 const toast = useToast();
 
-// Use onboarding form composable
 const { formData, resetForm } = useOnboardingForm();
 
-// Use stepper composable
 const {
   steps,
   activeStep,
