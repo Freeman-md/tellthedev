@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col md:flex-row h-screen">
-    <AppSidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
+    <SharedAppSidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
 
     <Transition name="fade">
       <div
@@ -11,13 +11,13 @@
     </Transition>
 
     <div class="flex flex-col flex-1 overflow-y-auto">
-      <AppHeader @toggle-sidebar="isSidebarOpen = !isSidebarOpen" />
+      <SharedAppHeader @toggle-sidebar="isSidebarOpen = !isSidebarOpen" />
 
       <main class="flex-1 p-6">
         <slot />
       </main>
 
-      <AppFooter />
+      <SharedAppFooter />
     </div>
   </div>
 </template>
