@@ -31,8 +31,8 @@ function removeOrigin(index: number) {
       <p v-if="subtitle" class="text-gray-500 mt-1">{{ subtitle }}</p>
     </div>
 
-    <UForm class="space-y-4">
-      <UFormGroup
+    <UForm :state="origins" class="space-y-4">
+      <UFormField
         label="Domain"
         description="Enter a domain and press enter or click add"
       >
@@ -45,7 +45,7 @@ function removeOrigin(index: number) {
           />
           <UButton size="sm" @click="addOrigin">Add</UButton>
         </div>
-      </UFormGroup>
+      </UFormField>
 
       <div v-if="origins.length > 0" class="flex flex-wrap gap-2 mt-4">
         <UBadge

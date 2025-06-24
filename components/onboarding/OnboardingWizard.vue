@@ -44,7 +44,7 @@ const steps = ref<StepperItem[]>([
   },
 ]);
 
-const activeStep = ref(0);
+const activeStep = ref(2);
 
 const stepper = useTemplateRef<UStepperRef>("stepper");
 </script>
@@ -53,7 +53,7 @@ const stepper = useTemplateRef<UStepperRef>("stepper");
   <div class="w-full">
     <pre class="text-xs mt-4 text-gray-500">{{ formData }}</pre>
 
-    <UStepper ref="stepper" v-model="activeStep" :items="steps" class="w-full">
+    <UStepper ref="stepper" v-model="activeStep" :items="steps" class="w-full space-y-8">
       <template #project-info>
         <div class="aspect-video">
           <ProjectDetailsForm

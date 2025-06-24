@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import type { CheckboxGroupItem, RadioGroupItem } from '@nuxt/ui'
+import { computed, ref } from 'vue'
 
 const modelValue = defineModel<{
   widgetSettings: {
@@ -17,22 +18,22 @@ defineProps<{
 
 const settings = computed(() => modelValue.value!.widgetSettings)
 
-const themeOptions = [
+const themeOptions = ref<RadioGroupItem[]>([
   { label: 'System', value: 'system' },
   { label: 'Light', value: 'light' },
   { label: 'Dark', value: 'dark' }
-]
+])
 
-const positionOptions = [
+const positionOptions = ref<RadioGroupItem[]>([
   { label: 'Bottom Right', value: 'bottom-right' },
   { label: 'Bottom Left', value: 'bottom-left' }
-]
+])
 
-const typeOptions = [
+const typeOptions = ref<CheckboxGroupItem[]>([
   { label: 'Bug', value: 'bug' },
   { label: 'Idea', value: 'idea' },
   { label: 'Other', value: 'other' }
-]
+])
 </script>
 
 <template>
@@ -43,25 +44,25 @@ const typeOptions = [
     </div>
 
     <UForm :state="settings" class="space-y-6">
-      <UFormGroup label="Theme">
-        <URadioGroup v-model="settings.theme" :options="themeOptions" />
-      </UFormGroup>
+      <UFormField label="Theme">
+        <URadioGroup v-model="settings.theme" :items="themeOptions" />
+      </UFormField>
 
-      <UFormGroup label="Widget Position">
-        <URadioGroup v-model="settings.position" :options="positionOptions" />
-      </UFormGroup>
+      <UFormField label="Widget Position">
+        <URadioGroup v-model="settings.position" :items="positionOptions" />
+      </UFormField>
 
-      <UFormGroup label="Show Screenshot Button">
+      <UFormField label="Show Screenshot Button">
         <USwitch v-model="settings.allowScreenshot" />
-      </UFormGroup>
+      </UFormField>
 
-      <UFormGroup label="Show Email Field">
+      <UFormField label="Show Email Field">
         <USwitch v-model="settings.allowEmail" />
-      </UFormGroup>
+      </UFormField>
 
-      <UFormGroup label="Default Feedback Types">
-        <UCheckboxGroup v-model="settings.defaultTypes" :options="typeOptions" />
-      </UFormGroup>
+      <UFormField label="Default Feedback Types">
+        <UCheckboxGroup v-model="settings.defaultTypes" :items="typeOptions" />
+      </UFormField>
     </UForm>
   </div>
 </template>
