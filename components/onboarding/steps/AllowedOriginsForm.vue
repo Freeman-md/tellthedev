@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import type { FormError } from "@nuxt/ui";
+import { isValidDomain } from "#imports";
 
 const modelValue = defineModel<{
   origins: string[];
@@ -15,30 +16,27 @@ const origins = computed(() => modelValue.value!.origins);
 const input = ref("");
 
 function addOrigin() {
-  let value = input.value.trim().toLowerCase()
+  let value = input.value.trim().toLowerCase();
+  value = value.replace(/^https?:\/\//, "");
 
-  value = value.replace(/^https?:\/\//, '')
+  const formatted = `https://${value}`;
 
-  const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/;
+  if (!value || origins.value.includes(formatted)) return;
 
-  if (!value || origins.value.includes(`https://${value}`)) return;
-
-  if (!domainRegex.test(value)) {
+  if (!isValidDomain(value)) {
     formRef.value?.setErrors([
       {
-        name: 'origins',
-        message: 'Please enter a valid domain (e.g. mysite.com)',
-      }
-    ])
-    return
+        name: "origins",
+        message: "Please enter a valid domain (e.g. mysite.com)",
+      },
+    ]);
+    return;
   }
 
-  formRef.value?.setErrors([])
-
-  origins.value.push(`https://${value}`)
-  input.value = ''
+  formRef.value?.setErrors([]);
+  origins.value.push(formatted);
+  input.value = "";
 }
-
 
 function removeOrigin(index: number) {
   origins.value.splice(index, 1);
