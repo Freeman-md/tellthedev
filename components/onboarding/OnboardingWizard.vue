@@ -211,7 +211,7 @@ const stepperSize = computed(() =>
       :size="stepperSize"
     >
       <template #project-info>
-        <div class="aspect-video">
+        <div class="min-h-[30vh] overflow-auto">
           <ProjectDetailsForm
             :ref="stepRefs[0]"
             v-model="formData"
@@ -221,7 +221,7 @@ const stepperSize = computed(() =>
       </template>
 
       <template #allowed-origins>
-        <div class="aspect-video">
+        <div class="min-h-[30vh] overflow-auto">
           <AllowedOriginsForm
             :ref="stepRefs[1]"
             v-model="formData"
@@ -231,7 +231,7 @@ const stepperSize = computed(() =>
       </template>
 
       <template #widget-settings>
-        <div class="aspect-video">
+        <div class="min-h-[30vh] overflow-auto">
           <WidgetSettingsForm
             :ref="stepRefs[2]"
             v-model="formData"
@@ -241,7 +241,7 @@ const stepperSize = computed(() =>
       </template>
 
       <template #finish-setup>
-        <div class="aspect-video flex flex-col justify-between gap-6">
+        <div class="min-h-[30vh] overflow-auto flex flex-col justify-between gap-6">
           <InstallationInstructions
             :project="{
               slug: projectCreated?.slug!,
