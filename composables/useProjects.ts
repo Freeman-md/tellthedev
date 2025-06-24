@@ -1,28 +1,25 @@
-// composables/useProjects.ts
-import { ref } from 'vue'
-import { useSupabaseUser } from '#imports'
-import type { CreateProjectPayload, Project } from '@/types/project'
+import { useAsyncData, useState, useSupabaseUser } from '#imports'
+import type { CreateProjectPayload } from '@/types/project'
 import { ProjectService } from '~/services/project-service'
 
 export const useProjects = () => {
   const user = useSupabaseUser()
   const service = new ProjectService()
+  const projects = useState<Project[]>('projects', () => [])
 
-  const projects = ref<Project[]>([])
-  const pending = ref(false)
-  const error = ref<Error | null>(null)
+  const {
+    pending: isFetchingUserProjects,
+    execute: fetchUserProjects,
+    status: fetchUserProjectsStatus,
+    error: fetchUserProjectsError,
+  } = useAsyncData('user-projects', async () => {
+    if (!user.value) throw new Error('User not authenticated')
 
-  const load = async () => {
-    if (!user.value) return
-    pending.value = true
-    try {
-      projects.value = await service.fetchUserProjects(user.value.id)
-    } catch (err) {
-      error.value = err as Error
-    } finally {
-      pending.value = false
-    }
-  }
+    projects.value = await service.fetchUserProjects(user.value.id)
+
+  }, {
+    immediate: false,
+  })
 
   const addProject = async (payload: CreateProjectPayload) => {
     if (!user.value) throw new Error('User not authenticated')
@@ -36,9 +33,10 @@ export const useProjects = () => {
 
   return {
     projects,
-    pending,
-    error,
-    load,
+    isFetchingUserProjects,
+    fetchUserProjects,
+    fetchUserProjectsError,
+    fetchUserProjectsStatus,
     addProject,
   }
 }
