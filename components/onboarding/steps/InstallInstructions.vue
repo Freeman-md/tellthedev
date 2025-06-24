@@ -10,10 +10,9 @@ const props = defineProps<{
   subtitle?: string
 }>()
 
-const embedSnippet = computed(() => {
-  const slug = props.project.slug || 'your-project-slug'
+const embedSnippet = computed(() => {  
   const apiKey = props.project.api_key || 'your-api-key'
-  return `<script src="https://cdn.tellthedev.com/widget.js" data-project="${slug}" data-api-key="${apiKey}" defer><\\/script>`
+  return `<script src="https://cdn.tellthedev.com/widget.js" data-project-key="${apiKey}" defer><\\/script>`
 })
 
 const { copy, copied } = useClipboard({ source: embedSnippet })
