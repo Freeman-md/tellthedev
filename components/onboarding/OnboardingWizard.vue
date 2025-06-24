@@ -6,6 +6,7 @@ import AllowedOriginsForm from "./steps/AllowedOriginsForm.vue";
 import WidgetSettingsForm from "./steps/WidgetSettingsForm.vue";
 import InstallationInstructions from "./steps/InstallationInstructions.vue";
 import { navigateTo, useProjects, useToast } from "#imports";
+import { useMediaQuery } from '@vueuse/core'
 
 const isCreating = ref(false);
 const projectCreated = ref<Project | null>(null);
@@ -189,6 +190,14 @@ const resetWizard = () => {
 
   stepRefs.forEach((ref) => ref.value?.reset?.());
 };
+
+
+const isXS = useMediaQuery('(max-width: 400px)')
+const isSM = useMediaQuery('(max-width: 640px)')
+
+const stepperSize = computed(() =>
+  isXS.value ? 'xs' : isSM.value ? 'sm' : 'md'
+)
 </script>
 
 <template>
@@ -199,6 +208,7 @@ const resetWizard = () => {
       disabled
       :items="steps"
       class="w-full space-y-8"
+      :size="stepperSize"
     >
       <template #project-info>
         <div class="aspect-video">
