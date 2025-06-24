@@ -10,5 +10,5 @@
 </template>
 
 <script setup lang="ts">
-import OnboardingWizard from "~/components/onboarding/OnboardingWizard.vue";
+import OnboardingWizard from "~/components/onboarding/Wizard.vue";
 </script>

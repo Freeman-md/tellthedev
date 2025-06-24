@@ -7,6 +7,7 @@ import InstallationInstructions from "./steps/InstallationInstructions.vue";
 import { navigateTo, useProjects, useToast } from "#imports";
 import { useOnboardingStepper } from "@/composables/useOnboardingStepper";
 import { useOnboardingForm } from "@/composables/useOnboardingForm";
+import OnboardingNavButtons from "./NavButtons.vue";
 
 const isCreating = ref(false);
 const projectCreated = ref<Project | null>(null);
@@ -200,35 +201,15 @@ const resetWizard = () => {
       </template>
     </UStepper>
 
-    <div v-if="showNavButtons" class="flex gap-2 justify-between mt-4">
-      <UButton
-        variant="outline"
-        leading-icon="i-lucide-arrow-left"
-        :disabled="!stepper?.hasPrev || isCreating"
-        @click="handlePrev"
-      >
-        Prev
-      </UButton>
-
-      <UButton
-        v-if="showCreateButton"
-        variant="solid"
-        :loading="isCreating"
-        :disabled="isCreating"
-        @click="handleCreateProject"
-      >
-        {{ isCreating ? "Creating Project..." : "Create Project" }}
-      </UButton>
-
-      <UButton
-        v-else-if="showNextButton"
-        variant="outline"
-        trailing-icon="i-lucide-arrow-right"
-        :disabled="!stepper?.hasNext"
-        @click="handleNext"
-      >
-        Next
-      </UButton>
-    </div>
+    <OnboardingNavButtons
+      v-if="showNavButtons"
+      :is-creating="isCreating"
+      :show-create-button="showCreateButton"
+      :show-next-button="showNextButton"
+      :stepper="stepper"
+      @prev="handlePrev"
+      @next="handleNext"
+      @create="handleCreateProject"
+    />
   </div>
 </template>
