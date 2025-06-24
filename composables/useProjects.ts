@@ -1,37 +1,38 @@
 // composables/useProjects.ts
-import { ref, useSupabaseClient, useSupabaseUser, useAsyncData } from '#imports';
+import { ref } from 'vue'
+import { useSupabaseUser } from '#imports'
+import type { Project } from '@/types/project'
+import { ProjectService } from '~/services/project-service'
 
 export const useProjects = () => {
-  const supabase = useSupabaseClient();
-  const user = useSupabaseUser();
-  const projects = ref<Project[]>([]);
+  const user = useSupabaseUser()
+  const service = new ProjectService()
 
-  const { data, pending, error, refresh } = useAsyncData(
-    'user-projects',
-    async () => {
-      if (!user.value) return [];
+  const projects = ref<Project[]>([])
+  const pending = ref(false)
+  const error = ref<Error | null>(null)
 
-      const { data, error } = await supabase
-        .from('projects')
-        .select('id, name, created_at, updated_at')
-        .eq('user_id', user.value.id)
-        .order('updated_at', { ascending: false });
-
-      if (error) throw error;
-      return data as Project[];
-    },
-    {
-      server: false,
-      watch: [user],
+  const load = async () => {
+    if (!user.value) return
+    pending.value = true
+    try {
+      projects.value = await service.fetchUserProjects(user.value.id)
+    } catch (err) {
+      error.value = err as Error
+    } finally {
+      pending.value = false
     }
-  );
+  }
 
-  projects.value = data.value || [];
+  const addProject = async (payload: Omit<Project, 'id' | 'created_at' | 'updated_at'>) => {
+    return await service.createProject(payload)
+  }
 
   return {
     projects,
     pending,
     error,
-    refresh,
-  };
-};
+    load,
+    addProject,
+  }
+}
