@@ -45,9 +45,25 @@ const steps = ref<StepperItem[]>([
   },
 ]);
 
-const activeStep = ref(2);
+const activeStep = ref(0);
+
+const stepRefs = [
+  ref(),
+  ref(),
+  ref(),
+  ref()
+]
 
 const stepper = useTemplateRef<UStepperRef>("stepper");
+
+const handleNext = async () => {
+  const current = stepRefs[activeStep.value]?.value
+  const valid = await current?.validate?.()
+
+  if (!valid) return
+
+  stepper.value?.next()
+}
 </script>
 
 <template>
@@ -63,6 +79,7 @@ const stepper = useTemplateRef<UStepperRef>("stepper");
       <template #project-info>
         <div class="aspect-video">
           <ProjectDetailsForm
+            :ref="stepRefs[0]"
             v-model="formData"
             :subtitle="'Add details about your project to get started'"
           />
@@ -109,7 +126,7 @@ const stepper = useTemplateRef<UStepperRef>("stepper");
       <UButton
         trailing-icon="i-lucide-arrow-right"
         :disabled="!stepper?.hasNext"
-        @click="stepper?.next()"
+        @click="handleNext"
       >
         Next
       </UButton>

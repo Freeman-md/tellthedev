@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import type { FormError } from '@nuxt/ui'
+import { computed, ref } from 'vue'
 
 const modelValue = defineModel<{
   project: {
@@ -9,11 +10,33 @@ const modelValue = defineModel<{
   }
 }>()
 
-const project = computed(() => modelValue.value!.project)
-
 defineProps<{
     subtitle: string
 }>()
+
+const project = computed(() => modelValue.value!.project)
+
+const formRef = ref()
+
+const validate = async () => {
+  const errors: FormError[] = []
+
+  if (!project.value.name?.trim()) {
+    errors.push({ name: 'name', message: 'Project name is required' })
+  }
+
+  if (!project.value.description?.trim()) {
+    errors.push({ name: 'description', message: 'Description is required' })
+  }
+
+  formRef.value?.setErrors(errors)
+
+  return errors.length === 0
+}
+
+defineExpose({
+  validate
+})
 </script>
 
 <template>
@@ -23,7 +46,7 @@ defineProps<{
       <p v-if="subtitle" class="text-gray-500 mt-1">{{ subtitle }}</p>
     </div>
 
-    <UForm :state="project" class="space-y-4 w-full">
+    <UForm ref="formRef" :state="project" class="space-y-4 w-full">
       <UFormField label="Project Name" name="name" required>
         <UInput v-model="project.name" class="w-full" />
       </UFormField>
