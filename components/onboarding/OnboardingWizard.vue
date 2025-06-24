@@ -68,6 +68,7 @@ const handleNext = async () => {
     <UStepper
       ref="stepper"
       v-model="activeStep"
+      disabled
       :items="steps"
       class="w-full space-y-8"
     >
