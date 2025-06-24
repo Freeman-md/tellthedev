@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { StepperItem } from "@nuxt/ui";
-import { computed, ref, useTemplateRef, watch } from "vue";
+import { computed, ref, useTemplateRef } from "vue";
 import ProjectDetailsForm from "./steps/ProjectDetailsForm.vue";
 import AllowedOriginsForm from "./steps/AllowedOriginsForm.vue";
 import WidgetSettingsForm from "./steps/WidgetSettingsForm.vue";
@@ -65,7 +65,15 @@ const showCreateButton = computed(
 );
 const showNextButton = computed(() => !isLastFormStep.value);
 
+const handlePrev = () => {
+  if (projectCreated.value || isFinalStep.value) return
+  stepper.value?.prev()
+}
+
+
 const handleNext = async () => {
+    if (projectCreated.value || isFinalStep.value) return
+
   const current = stepRefs[activeStep.value]?.value;
   const valid = await current?.validate?.();
 
@@ -74,34 +82,44 @@ const handleNext = async () => {
   stepper.value?.next();
 };
 
-watch(activeStep, async (newStep, oldStep) => {
-  if (newStep === 3 && !projectCreated.value) {
-    isCreating.value = true;
+const handleCreateProject = async () => {
+    if (projectCreated.value || isFinalStep.value) return
 
-    try {
-      const payload = {
-        name: formData.value.project.name,
-        slug: formData.value.project.slug,
-        description: formData.value.project.description,
-        origins: formData.value.origins,
-        widget_settings: formData.value.widgetSettings,
-      };
+  const current = stepRefs[activeStep.value]?.value;
+  const valid = await current?.validate?.();
 
-      projectCreated.value = await addProject(payload);
-    } catch (err) {
-      console.error("Failed to create project", err);
-      // optionally show toast or error message
-    } finally {
-      isCreating.value = false;
-    }
+  if (!valid) return;
+
+  isCreating.value = true;
+
+  const payload = {
+    name: formData.value.project.name,
+    slug: formData.value.project.slug,
+    description: formData.value.project.description,
+    origins: formData.value.origins,
+    widget_settings: formData.value.widgetSettings,
+  };
+
+  try {
+    const result = await addProject(payload);
+    projectCreated.value = result;
+
+    // Move to last step
+    stepper.value?.next();
+
+    // show success toast
+  } catch (err) {
+    console.error("❌ Failed to create project", err);
+
+    alert("Something went wrong. Please try again."); // UAlert/toast
+  } finally {
+    isCreating.value = false;
   }
-});
+};
 </script>
 
 <template>
   <div class="w-full">
-    <pre class="text-xs mt-4 text-gray-500">{{ formData }}</pre>
-
     <UStepper
       ref="stepper"
       v-model="activeStep"
@@ -142,19 +160,22 @@ watch(activeStep, async (newStep, oldStep) => {
       <template #finish-setup>
         <div class="aspect-video">
           <InstallInstructions
-            v-model="formData"
+            :project="{
+              slug: projectCreated?.slug!,
+              api_key: projectCreated?.api_key!,
+            }"
             :subtitle="'Copy the embed script and launch your widget'"
           />
         </div>
       </template>
     </UStepper>
 
-    <div class="flex gap-2 justify-between mt-4">
+    <div v-if="showNavButtons" class="flex gap-2 justify-between mt-4">
       <UButton
         variant="outline"
         leading-icon="i-lucide-arrow-left"
         :disabled="!stepper?.hasPrev || isCreating"
-        @click="stepper?.prev()"
+        @click="handlePrev"
       >
         Prev
       </UButton>
@@ -164,20 +185,20 @@ watch(activeStep, async (newStep, oldStep) => {
         variant="solid"
         :loading="isCreating"
         :disabled="isCreating"
-        
+        @click="handleCreateProject"
       >
         {{ isCreating ? "Creating Project..." : "Create Project" }}
       </UButton>
 
       <UButton
-    v-else-if="showNextButton"
-    variant="outline"
-    trailing-icon="i-lucide-arrow-right"
-    :disabled="!stepper?.hasNext"
-    @click="handleNext"
-  >
-    Next
-  </UButton>
+        v-else-if="showNextButton"
+        variant="outline"
+        trailing-icon="i-lucide-arrow-right"
+        :disabled="!stepper?.hasNext"
+        @click="handleNext"
+      >
+        Next
+      </UButton>
     </div>
   </div>
 </template>

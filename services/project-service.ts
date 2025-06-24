@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Project } from '@/types/project'
+import type { CreateProjectPayload, Project } from '@/types/project'
 import { useSupabaseClient } from '#imports'
 
 export class ProjectService {
@@ -20,7 +20,7 @@ export class ProjectService {
     return data as Project[]
   }
 
-  async createProject(payload: Omit<Project, 'id' | 'created_at' | 'updated_at'>): Promise<Project> {
+  async createProject(payload: CreateProjectPayload): Promise<Project> {
     const { data, error } = await this.supabase
       .from('projects')
       .insert(payload)

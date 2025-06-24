@@ -1,7 +1,7 @@
 // composables/useProjects.ts
 import { ref } from 'vue'
 import { useSupabaseUser } from '#imports'
-import type { Project } from '@/types/project'
+import type { CreateProjectPayload, Project } from '@/types/project'
 import { ProjectService } from '~/services/project-service'
 
 export const useProjects = () => {
@@ -24,9 +24,15 @@ export const useProjects = () => {
     }
   }
 
-  const addProject = async (payload: Omit<Project, 'id' | 'created_at' | 'updated_at'>) => {
-    return await service.createProject(payload)
+  const addProject = async (payload: CreateProjectPayload) => {
+    if (!user.value) throw new Error('User not authenticated')
+
+    return await service.createProject({
+      ...payload,
+      user_id: user.value.id,
+    })
   }
+
 
   return {
     projects,

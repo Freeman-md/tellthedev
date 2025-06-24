@@ -2,19 +2,18 @@
 import { computed } from 'vue'
 import { useClipboard } from '@vueuse/core'
 
-const modelValue = defineModel<{
+const props = defineProps<{
   project: {
     slug: string
+    api_key: string
   }
-}>()
-
-defineProps<{
   subtitle?: string
 }>()
 
 const embedSnippet = computed(() => {
-  const slug = modelValue.value?.project.slug || 'your-project-slug'
-  return `<script src="https://cdn.tellthedev.com/widget.js" data-project="${slug}" defer><\\/script>`
+  const slug = props.project.slug || 'your-project-slug'
+  const apiKey = props.project.api_key || 'your-api-key'
+  return `<script src="https://cdn.tellthedev.com/widget.js" data-project="${slug}" data-api-key="${apiKey}" defer><\\/script>`
 })
 
 const { copy, copied } = useClipboard({ source: embedSnippet })
