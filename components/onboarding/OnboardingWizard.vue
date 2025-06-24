@@ -4,6 +4,7 @@ import { ref, useTemplateRef } from "vue";
 import ProjectDetailsForm from "./steps/ProjectDetailsForm.vue";
 import AllowedOriginsForm from "./steps/AllowedOriginsForm.vue";
 import WidgetSettingsForm from "./steps/WidgetSettingsForm.vue";
+import InstallInstructions from "./steps/InstallInstructions.vue";
 
 const formData = ref({
   project: {
@@ -53,7 +54,12 @@ const stepper = useTemplateRef<UStepperRef>("stepper");
   <div class="w-full">
     <pre class="text-xs mt-4 text-gray-500">{{ formData }}</pre>
 
-    <UStepper ref="stepper" v-model="activeStep" :items="steps" class="w-full space-y-8">
+    <UStepper
+      ref="stepper"
+      v-model="activeStep"
+      :items="steps"
+      class="w-full space-y-8"
+    >
       <template #project-info>
         <div class="aspect-video">
           <ProjectDetailsForm
@@ -82,7 +88,12 @@ const stepper = useTemplateRef<UStepperRef>("stepper");
       </template>
 
       <template #finish-setup>
-        <div class="aspect-video">This is for Finish Setup</div>
+        <div class="aspect-video">
+          <InstallInstructions
+            v-model="formData"
+            :subtitle="'Copy the embed script and launch your widget'"
+          />
+        </div>
       </template>
     </UStepper>
 
