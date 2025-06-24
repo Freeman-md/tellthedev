@@ -5,12 +5,14 @@ import ProjectDetailsForm from "./steps/ProjectDetailsForm.vue";
 import AllowedOriginsForm from "./steps/AllowedOriginsForm.vue";
 import WidgetSettingsForm from "./steps/WidgetSettingsForm.vue";
 import InstallInstructions from "./steps/InstallInstructions.vue";
-import { useProjects } from "#imports";
+import { navigateTo, useProjects, useToast } from "#imports";
 
 const isCreating = ref(false);
 const projectCreated = ref<Project | null>(null);
 
 const { addProject } = useProjects();
+
+const toast = useToast();
 
 const formData = ref({
   project: {
@@ -66,13 +68,12 @@ const showCreateButton = computed(
 const showNextButton = computed(() => !isLastFormStep.value);
 
 const handlePrev = () => {
-  if (projectCreated.value || isFinalStep.value) return
-  stepper.value?.prev()
-}
-
+  if (projectCreated.value || isFinalStep.value) return;
+  stepper.value?.prev();
+};
 
 const handleNext = async () => {
-    if (projectCreated.value || isFinalStep.value) return
+  if (projectCreated.value || isFinalStep.value) return;
 
   const current = stepRefs[activeStep.value]?.value;
   const valid = await current?.validate?.();
@@ -83,7 +84,7 @@ const handleNext = async () => {
 };
 
 const handleCreateProject = async () => {
-    if (projectCreated.value || isFinalStep.value) return
+  if (projectCreated.value || isFinalStep.value) return;
 
   const current = stepRefs[activeStep.value]?.value;
   const valid = await current?.validate?.();
@@ -104,14 +105,57 @@ const handleCreateProject = async () => {
     const result = await addProject(payload);
     projectCreated.value = result;
 
-    // Move to last step
     stepper.value?.next();
 
-    // show success toast
-  } catch (err) {
-    console.error("❌ Failed to create project", err);
+    toast.add({
+      title: "Project created!",
+      description: "Your project is ready — you can now embed the widget 🚀",
+      icon: "i-lucide-check-circle",
+      color: "success",
+      actions: [
+        {
+          label: "Go to Project Dashboard",
+          onClick: (e) => {
+            e?.stopPropagation();
 
-    alert("Something went wrong. Please try again."); // UAlert/toast
+            navigateTo(`/projects/${result.slug}`);
+          },
+        },
+      ],
+    });
+  } catch (err: unknown) {
+    const errorMessage = (err as { message?: string })?.message;
+    const isUniqueViolation =
+      typeof errorMessage === "string" &&
+      errorMessage.includes("duplicate key");
+
+    if (isUniqueViolation) {
+      toast.add({
+        title: "Project name already exists",
+        description: "Please choose a different name or slug.",
+        color: "warning",
+      });
+
+      activeStep.value = 0;
+      return;
+    }
+
+    toast.add({
+      title: "Failed to create project",
+      description:
+        "Something went wrong. Please try again or contact support if this continues.",
+      icon: "i-lucide-alert-triangle",
+      color: "error",
+      actions: [
+        {
+          icon: "i-lucide-refresh-cw",
+          label: "Retry",
+          color: "neutral",
+          variant: "outline",
+          onClick: () => handleCreateProject(),
+        },
+      ],
+    });
   } finally {
     isCreating.value = false;
   }
