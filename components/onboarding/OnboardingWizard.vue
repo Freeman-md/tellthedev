@@ -6,27 +6,15 @@ import WidgetSettingsForm from "./steps/WidgetSettingsForm.vue";
 import InstallationInstructions from "./steps/InstallationInstructions.vue";
 import { navigateTo, useProjects, useToast } from "#imports";
 import { useOnboardingStepper } from "@/composables/useOnboardingStepper";
+import { useOnboardingForm } from "@/composables/useOnboardingForm";
 
 const isCreating = ref(false);
 const projectCreated = ref<Project | null>(null);
 const { addProject } = useProjects();
 const toast = useToast();
 
-const formData = ref({
-  project: {
-    name: "",
-    description: "",
-    slug: "",
-  },
-  origins: [],
-  widgetSettings: {
-    theme: "system",
-    position: "bottom-right",
-    allowScreenshot: true,
-    allowEmail: false,
-    defaultTypes: ["bug", "idea"],
-  },
-});
+// Use onboarding form composable
+const { formData, resetForm } = useOnboardingForm();
 
 // Use stepper composable
 const {
@@ -39,9 +27,7 @@ const {
   isFinalStep,
   handlePrev,
   handleNext,
-} = useOnboardingStepper({
-  projectCreated
-});
+} = useOnboardingStepper({ projectCreated });
 
 const showNavButtons = computed(
   () => !projectCreated.value && !isFinalStep.value
@@ -135,25 +121,9 @@ const previewWidget = () =>
   );
 
 const resetWizard = () => {
-  formData.value = {
-    project: {
-      name: "",
-      description: "",
-      slug: "",
-    },
-    origins: [],
-    widgetSettings: {
-      theme: "system",
-      position: "bottom-right",
-      allowScreenshot: true,
-      allowEmail: false,
-      defaultTypes: ["bug", "idea"],
-    },
-  };
-
+  resetForm();
   projectCreated.value = null;
   activeStep.value = 0;
-
   stepRefs.forEach((ref) => ref.value?.reset?.());
 };
 </script>
