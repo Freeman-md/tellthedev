@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import type { StepperItem } from "@nuxt/ui";
-import { ref, useTemplateRef } from "vue";
+import { computed, ref, useTemplateRef, watch } from "vue";
 import ProjectDetailsForm from "./steps/ProjectDetailsForm.vue";
 import AllowedOriginsForm from "./steps/AllowedOriginsForm.vue";
 import WidgetSettingsForm from "./steps/WidgetSettingsForm.vue";
 import InstallInstructions from "./steps/InstallInstructions.vue";
+import { useProjects } from "#imports";
+
+const isCreating = ref(false);
+const projectCreated = ref<Project | null>(null);
+
+const { addProject } = useProjects();
 
 const formData = ref({
   project: {
@@ -46,10 +52,18 @@ const steps = ref<StepperItem[]>([
 ]);
 
 const activeStep = ref(0);
-
 const stepRefs = [ref(), ref(), ref(), ref()];
-
 const stepper = useTemplateRef<UStepperRef>("stepper");
+
+const isLastFormStep = computed(() => activeStep.value === 2);
+const isFinalStep = computed(() => activeStep.value === 3);
+const showNavButtons = computed(
+  () => !projectCreated.value && !isFinalStep.value
+);
+const showCreateButton = computed(
+  () => isLastFormStep.value && !projectCreated.value
+);
+const showNextButton = computed(() => !isLastFormStep.value);
 
 const handleNext = async () => {
   const current = stepRefs[activeStep.value]?.value;
@@ -59,6 +73,29 @@ const handleNext = async () => {
 
   stepper.value?.next();
 };
+
+watch(activeStep, async (newStep, oldStep) => {
+  if (newStep === 3 && !projectCreated.value) {
+    isCreating.value = true;
+
+    try {
+      const payload = {
+        name: formData.value.project.name,
+        slug: formData.value.project.slug,
+        description: formData.value.project.description,
+        origins: formData.value.origins,
+        widget_settings: formData.value.widgetSettings,
+      };
+
+      projectCreated.value = await addProject(payload);
+    } catch (err) {
+      console.error("Failed to create project", err);
+      // optionally show toast or error message
+    } finally {
+      isCreating.value = false;
+    }
+  }
+});
 </script>
 
 <template>
@@ -114,20 +151,33 @@ const handleNext = async () => {
 
     <div class="flex gap-2 justify-between mt-4">
       <UButton
+        variant="outline"
         leading-icon="i-lucide-arrow-left"
-        :disabled="!stepper?.hasPrev"
+        :disabled="!stepper?.hasPrev || isCreating"
         @click="stepper?.prev()"
       >
         Prev
       </UButton>
 
       <UButton
-        trailing-icon="i-lucide-arrow-right"
-        :disabled="!stepper?.hasNext"
-        @click="handleNext"
+        v-if="showCreateButton"
+        variant="solid"
+        :loading="isCreating"
+        :disabled="isCreating"
+        
       >
-        Next
+        {{ isCreating ? "Creating Project..." : "Create Project" }}
       </UButton>
+
+      <UButton
+    v-else-if="showNextButton"
+    variant="outline"
+    trailing-icon="i-lucide-arrow-right"
+    :disabled="!stepper?.hasNext"
+    @click="handleNext"
+  >
+    Next
+  </UButton>
     </div>
   </div>
 </template>

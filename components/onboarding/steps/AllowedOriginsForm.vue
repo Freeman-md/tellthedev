@@ -77,6 +77,7 @@ defineExpose({ validate });
         <div class="flex items-center gap-2">
           <UInput
             v-model="input"
+            type="url"
             placeholder="myapp.com"
             class="flex-1"
             :ui="{
