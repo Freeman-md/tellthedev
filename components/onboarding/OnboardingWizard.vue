@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import type { StepperItem } from "@nuxt/ui";
-import { computed, ref, useTemplateRef } from "vue";
+import { computed, ref } from "vue";
 import ProjectDetailsForm from "./steps/ProjectDetailsForm.vue";
 import AllowedOriginsForm from "./steps/AllowedOriginsForm.vue";
 import WidgetSettingsForm from "./steps/WidgetSettingsForm.vue";
 import InstallationInstructions from "./steps/InstallationInstructions.vue";
 import { navigateTo, useProjects, useToast } from "#imports";
-import { useMediaQuery } from '@vueuse/core'
+import { useOnboardingStepper } from "@/composables/useOnboardingStepper";
 
 const isCreating = ref(false);
 const projectCreated = ref<Project | null>(null);
-
 const { addProject } = useProjects();
-
 const toast = useToast();
 
 const formData = ref({
@@ -31,35 +28,21 @@ const formData = ref({
   },
 });
 
-const steps = ref<StepperItem[]>([
-  {
-    slot: "project-info" as const,
-    title: "Project Info",
-    icon: "i-lucide-folder-plus",
-  },
-  {
-    slot: "allowed-origins" as const,
-    title: "Allowed Origins",
-    icon: "i-lucide-globe",
-  },
-  {
-    slot: "widget-settings" as const,
-    title: "Widget Settings",
-    icon: "i-lucide-sliders-horizontal",
-  },
-  {
-    slot: "finish-setup" as const,
-    title: "Finish Setup",
-    icon: "i-lucide-check-circle",
-  },
-]);
+// Use stepper composable
+const {
+  steps,
+  activeStep,
+  stepRefs,
+  stepper,
+  stepperSize,
+  isLastFormStep,
+  isFinalStep,
+  handlePrev,
+  handleNext,
+} = useOnboardingStepper({
+  projectCreated
+});
 
-const activeStep = ref(0);
-const stepRefs = [ref(), ref(), ref(), ref()];
-const stepper = useTemplateRef<UStepperRef>("stepper");
-
-const isLastFormStep = computed(() => activeStep.value === 2);
-const isFinalStep = computed(() => activeStep.value === 3);
 const showNavButtons = computed(
   () => !projectCreated.value && !isFinalStep.value
 );
@@ -67,22 +50,6 @@ const showCreateButton = computed(
   () => isLastFormStep.value && !projectCreated.value
 );
 const showNextButton = computed(() => !isLastFormStep.value);
-
-const handlePrev = () => {
-  if (projectCreated.value || isFinalStep.value) return;
-  stepper.value?.prev();
-};
-
-const handleNext = async () => {
-  if (projectCreated.value || isFinalStep.value) return;
-
-  const current = stepRefs[activeStep.value]?.value;
-  const valid = await current?.validate?.();
-
-  if (!valid) return;
-
-  stepper.value?.next();
-};
 
 const handleCreateProject = async () => {
   if (projectCreated.value || isFinalStep.value) return;
@@ -118,7 +85,6 @@ const handleCreateProject = async () => {
           label: "Go to Project Dashboard",
           onClick: (e) => {
             e?.stopPropagation();
-
             navigateTo(`/projects/${result.slug}`);
           },
         },
@@ -190,14 +156,6 @@ const resetWizard = () => {
 
   stepRefs.forEach((ref) => ref.value?.reset?.());
 };
-
-
-const isXS = useMediaQuery('(max-width: 400px)')
-const isSM = useMediaQuery('(max-width: 640px)')
-
-const stepperSize = computed(() =>
-  isXS.value ? 'xs' : isSM.value ? 'sm' : 'md'
-)
 </script>
 
 <template>
