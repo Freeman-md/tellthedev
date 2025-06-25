@@ -24,7 +24,7 @@ const typedData = data.value as FeedbackEntry[]
   <div class="bg-white dark:bg-muted rounded-lg border border-gray-100 p-4 w-full overflow-x-hidden">
     <h3 class="text-lg font-semibold mb-4">Recent Feedback</h3>
 
-    <BaseTable
+    <UiBaseTable
       :headers="headers"
       :data="typedData"
       :searchable-fields="searchTerms"
@@ -67,6 +67,6 @@ const typedData = data.value as FeedbackEntry[]
           </td>
         </tr>
       </template>
-    </BaseTable>
+    </UiBaseTable>
   </div>
 </template>
