@@ -25,7 +25,6 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta } from '#imports';
 import StatCard from '~/components/dashboard/StatCard.vue';
 import FeedbackDonut from '~/components/dashboard/FeedbackDonut.vue';
 import RecentFeedback from '~/components/dashboard/RecentFeedback.vue';

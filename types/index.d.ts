@@ -1,3 +1,5 @@
+/// <reference types="nuxt" />
+
 export { }
 
 declare global {

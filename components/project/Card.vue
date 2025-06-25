@@ -64,8 +64,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { formatRelativeTime } from "#imports";
-import type { Project } from "@/types/project";
+import { formatRelativeTime } from "@/shared/utils";
 
 const props = defineProps<{
   project: Pick<Project, "id" | "name" | "slug" | "created_at" | "origins">;

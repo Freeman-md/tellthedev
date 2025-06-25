@@ -1,19 +1,20 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends Record<string, unknown>">
 import { defineShortcuts } from '#imports';
 import { computed, ref, watch, type ComponentPublicInstance } from 'vue';
 import LoadingSpinner from '../ui/LoadingSpinner.vue';
 import ErrorState from '../ui/ErrorState.vue';
 import EmptyState from '../ui/EmptyState.vue';
 
-const props = defineProps<{
+interface BaseTableProps<T> {
   headers: string[];
-  data: Record<string, unknown>[];
-  searchableFields?: string[];
+  data: T[];
+  searchableFields?: Array<keyof T>;
   enableSearch?: boolean;
-    loading?: boolean;
+  loading?: boolean;
   error?: string | null;
   emptyMessage?: string;
-}>();
+}
+const props = defineProps<BaseTableProps<T>>();
 
 const emit = defineEmits<{
   (e: 'search', text: string): void;
@@ -21,7 +22,13 @@ const emit = defineEmits<{
 
 const searchText = ref('');
 const searchInputRef = ref<ComponentPublicInstance | null>(null);
-const searchTerm = ref(props.searchableFields?.[0] || '');
+
+const searchableFieldOptions = computed(() =>
+  (props.searchableFields ?? []).map((f) => String(f))
+);
+
+const searchTerm = ref(searchableFieldOptions.value[0] || '');
+
 
 defineShortcuts({
   "/": () => {
@@ -34,7 +41,8 @@ const filteredData = computed(() => {
   if (!props.searchableFields || !props.enableSearch) return props.data;
 
   return props.data.filter((item) => {
-    const fieldValue = item[searchTerm.value];
+    const key = searchTerm.value as keyof T;
+    const fieldValue = item?.[key];
     return typeof fieldValue === 'string'
       ? fieldValue.toLowerCase().includes(searchText.value.toLowerCase())
       : false;
@@ -59,7 +67,7 @@ watch(searchText, (val) => emit('search', val));
         </template>
       </UInput>
 
-      <USelectMenu v-model="searchTerm" :items="searchableFields" class="w-40" />
+      <USelectMenu v-model="searchTerm" :items="searchableFieldOptions" class="w-40" />
     </div>
 
     <LoadingSpinner v-if="loading" message="Loading..." />

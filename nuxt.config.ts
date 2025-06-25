@@ -38,11 +38,6 @@ export default defineNuxtConfig({
     colorMode: false // TODO: add support for light and dark mode
   },
 
-  imports: {
-    autoImport: true,
-    dirs: ['utils']
-  },
-
   supabase: {
     redirectOptions: {
       login: '/auth/login',

@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import {
-  formatRelativeTime,
-  useFeedback,
-} from '#imports';
-import BaseTable from '../base/BaseTable.vue';
+import { formatRelativeTime } from '@/shared/utils';
 
 const searchTerms: Array<keyof FeedbackEntry> = [
   'type',
@@ -19,6 +15,9 @@ const { data, headers, pending, error } = useFeedback(5, [
   'screenshot_url',
   'created_at',
 ]);
+
+const typedData = data.value as FeedbackEntry[]
+
 </script>
 
 <template>
@@ -27,7 +26,7 @@ const { data, headers, pending, error } = useFeedback(5, [
 
     <BaseTable
       :headers="headers"
-      :data="data as Record<string, unknown>[]"
+      :data="typedData"
       :searchable-fields="searchTerms"
       :enable-search="true"
       :loading="pending"
