@@ -3,7 +3,7 @@
     <div class="flex items-center space-x-2">
       <button
         class="md:hidden text-gray-700 hover:text-black focus:outline-none cursor-pointer mt-3"
-        @click="$emit('toggle-sidebar')"
+        @click="toggleSidebar"
       >
         <span class="sr-only">Toggle sidebar</span>
         <UIcon name="cil:hamburger-menu" size="25" />
@@ -48,7 +48,7 @@ const { logout } = useLogout()
 const projects = ref(["TellTheDev", "Freemancodz", "FileTidy"])
 const selectedProject = ref("TellTheDev")
 
-defineEmits(['toggle-sidebar'])
+const { toggleSidebar } = useSidebar()
 
 const dropdownItems = [
   {

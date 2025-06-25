@@ -1,9 +1,11 @@
 <template>
   <UCard>
-    
     <template #header>
       <div class="flex items-center gap-2">
-        <UIcon name="i-lucide-flash" class="text-primary" />
+        <UIcon
+          name="material-symbols:flash-on-outline-rounded"
+          class="text-primary"
+        />
         <span class="font-semibold">Quick Actions</span>
       </div>
     </template>

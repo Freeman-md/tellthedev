@@ -4,6 +4,7 @@ import { ProjectService } from '@/services/project-service'
 export const useProjects = () => {
   const user = useSupabaseUser()
   const service = new ProjectService()
+  const activeProject = useState<string | null>('active-project', () => null);
   const projects = useState<Project[]>('projects', () => [])
 
   const {
@@ -39,5 +40,6 @@ export const useProjects = () => {
     fetchUserProjectsError,
     fetchUserProjectsStatus,
     addProject,
+    activeProject,
   }
 }
