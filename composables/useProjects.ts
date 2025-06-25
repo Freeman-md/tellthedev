@@ -1,6 +1,5 @@
 import { useAsyncData, useState, useSupabaseUser } from '#imports'
-import type { CreateProjectPayload } from '@/types/project'
-import { ProjectService } from '~/services/project-service'
+import { ProjectService } from '@/services/project-service'
 
 export const useProjects = () => {
   const user = useSupabaseUser()
@@ -10,6 +9,7 @@ export const useProjects = () => {
   const {
     pending: isFetchingUserProjects,
     execute: fetchUserProjects,
+    refresh: refreshUserProjects,
     status: fetchUserProjectsStatus,
     error: fetchUserProjectsError,
   } = useAsyncData('user-projects', async () => {
@@ -35,6 +35,7 @@ export const useProjects = () => {
     projects,
     isFetchingUserProjects,
     fetchUserProjects,
+    refreshUserProjects,
     fetchUserProjectsError,
     fetchUserProjectsStatus,
     addProject,

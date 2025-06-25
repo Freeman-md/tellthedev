@@ -21,6 +21,8 @@ declare global {
 
     type Project = import('./project').Project;
 
+    type CreateProjectPayload = import('./project').CreateProjectPayload;
+
     type UStepperRef = {
         hasNext: boolean,
         hasPrev: boolean,
