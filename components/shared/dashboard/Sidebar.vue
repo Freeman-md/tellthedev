@@ -11,6 +11,8 @@ const navigationItems: NavigationMenuItem[][] = [
       label: "Projects",
       icon: "i-lucide-folder",
       to: "/dashboard",
+      exact: true,
+
     },
     { label: "Settings", icon: "i-lucide-settings-2", to: "/dashboard/account/settings" },
     {

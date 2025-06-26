@@ -1,0 +1,3 @@
+<template>
+    <UiComingSoon />
+</template>

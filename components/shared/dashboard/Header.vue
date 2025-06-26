@@ -14,6 +14,7 @@
       </NuxtLink>
 
       <USelectMenu
+        v-if="shouldShowProjectSelector"
         v-model="selectedProject"
         :items="projects"
         class="w-40 hidden md:block"
@@ -45,6 +46,9 @@ import type { DropdownMenuItem } from '@nuxt/ui'
 import { ref } from 'vue'
 
 const { logout } = useLogout()
+const route = useRoute()
+
+
 const projects = ref(["TellTheDev", "Freemancodz", "FileTidy"])
 const selectedProject = ref("TellTheDev")
 
@@ -63,4 +67,9 @@ const dropdownItems = [
     onSelect: logout
   }
 ] satisfies DropdownMenuItem[]
+
+const shouldShowProjectSelector = computed(() =>
+  route.path.startsWith('/dashboard/projects/')
+)
+
 </script>
