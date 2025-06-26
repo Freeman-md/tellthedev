@@ -13,7 +13,7 @@
     <ul class="space-y-2">
       <li>
         <NuxtLink
-          to="/projects/new"
+          to="/dashboard/new-project"
           class="text-sm hover:underline flex items-center gap-2"
         >
           <UIcon name="i-lucide-plus-circle" class="text-muted-foreground" />
@@ -22,7 +22,7 @@
       </li>
       <li>
         <NuxtLink
-          to="/feedback"
+          to="feedback"
           class="text-sm hover:underline flex items-center gap-2"
         >
           <UIcon name="i-lucide-message-square" class="text-muted-foreground" />
@@ -31,7 +31,7 @@
       </li>
       <li>
         <NuxtLink
-          to="/widget/settings"
+          to="widget-settings"
           class="text-sm hover:underline flex items-center gap-2"
         >
           <UIcon name="i-lucide-settings" class="text-muted-foreground" />
@@ -40,7 +40,7 @@
       </li>
       <li>
         <NuxtLink
-          to="/analytics"
+          to="analytics"
           class="text-sm hover:underline flex items-center gap-2"
         >
           <UIcon name="i-lucide-bar-chart" class="text-muted-foreground" />

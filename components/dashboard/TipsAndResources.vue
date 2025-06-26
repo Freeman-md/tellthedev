@@ -12,7 +12,7 @@
       <li>🎨 Customize widget branding</li>
       <li>
         📘
-        <NuxtLink to="/docs" class="hover:underline text-primary"
+        <NuxtLink to="" class="hover:underline text-primary"
           >View docs →</NuxtLink
         >
       </li>

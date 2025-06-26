@@ -9,7 +9,7 @@
         <UIcon name="cil:hamburger-menu" size="25" />
       </button>
 
-      <NuxtLink to="/" class="text-xl font-bold md:hidden">
+      <NuxtLink to="/dashboard" class="text-xl font-bold md:hidden">
         <NuxtImg src="/images/logo.svg" width="120" alt="Logo" class="mt-1" />
       </NuxtLink>
 

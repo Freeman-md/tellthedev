@@ -14,7 +14,7 @@ const navigationItems: NavigationMenuItem[][] = [
     {
       label: "Overview",
       icon: "i-lucide-layout-dashboard",
-      to: `/dashboard/projects/${projectId}/overview`,
+      to: `/dashboard/projects/${projectId}`,
     },
     {
       label: "Feedback",
@@ -55,6 +55,20 @@ const navigationItems: NavigationMenuItem[][] = [
           active: false,
         },
       ],
+    },
+  ],
+  [
+    {
+      label: "Docs",
+      icon: "i-lucide-book",
+      to: "https://docs.tellthedev.com",
+      target: "_blank",
+    },
+    {
+      label: "Support",
+      icon: "i-lucide-life-buoy",
+      to: "https://tellthedev.com/support",
+      target: "_blank",
     },
   ],
 ]

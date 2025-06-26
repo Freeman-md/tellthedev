@@ -46,7 +46,7 @@ const sidebarComponent = computed(() =>
 {
   console.log(route.path, route.path.includes('/dashboard/projects/'))
 
-  return route.path.includes('/dashboard/projects/**')
+  return route.path.includes('/dashboard/projects/')
     ? SharedProjectSidebar
     : SharedDashboardSidebar
 }
