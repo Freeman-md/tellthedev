@@ -52,8 +52,9 @@ const { toggleSidebar } = useSidebar()
 
 const dropdownItems = [
   {
-    label: 'Profile',
-    icon: 'i-lucide-user-circle'
+    label: 'Settings',
+    icon: 'i-lucide-settings-2',
+    to: '/dashboard/account/settings'
   },
   {
     label: 'Logout',

@@ -14,7 +14,7 @@
           <p class="text-sm text-gray-500 truncate">@{{ project.slug }}</p>
         </div>
         <UButton
-          :to="`/projects/${project.slug}`"
+          :to="`/dashboard/projects/${project.slug}`"
           icon="i-lucide-arrow-right"
           size="sm"
           variant="ghost"
