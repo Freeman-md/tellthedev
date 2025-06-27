@@ -4,6 +4,7 @@
     arrow
     :content="{ side: 'bottom', sideOffset: 8 }"
     :text="undefined"
+    @click="goToProjectDashboard"
   >
     <div
       class="border border-gray-200 dark:border-gray-800 rounded-xl p-4 hover:shadow transition cursor-pointer"
@@ -66,11 +67,13 @@
 import { computed } from "vue";
 import { formatRelativeTime } from "@/shared/utils";
 
-const props = defineProps<{
+const { project } = defineProps<{
   project: Pick<Project, "id" | "name" | "slug" | "created_at" | "origins">;
 }>();
 
 const formattedDate = computed(() =>
-  formatRelativeTime(props.project.created_at)
+  formatRelativeTime(project.created_at)
 );
+
+const goToProjectDashboard = () => navigateTo(`/dashboard/projects/${project.slug}`)
 </script>
