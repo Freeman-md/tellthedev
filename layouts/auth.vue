@@ -5,7 +5,7 @@
                 <NuxtImg src="/images/logo.svg" width="120" class="mb-10" alt="Logo" />
             </NuxtLink>
 
-            <slot></slot>
+            <slot />
 
             <div class="mt-8">
                 Built by <a href="" class="text-primary hover:underline">Freemancodz</a>

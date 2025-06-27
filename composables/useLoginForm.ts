@@ -56,7 +56,7 @@ export const useLoginForm = () => {
         title: '✅ Login successful',
       })
 
-      navigateTo('/')
+      navigateTo('/dashboard')
 
     } catch (err) {
       toast.add({

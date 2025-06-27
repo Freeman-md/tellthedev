@@ -30,8 +30,4 @@ import FeedbackDonut from '~/components/dashboard/FeedbackDonut.vue';
 import RecentFeedback from '~/components/dashboard/RecentFeedback.vue';
 import QuickActions from '~/components/dashboard/QuickActions.vue';
 import TipsAndResources from '~/components/dashboard/TipsAndResources.vue';
-
-definePageMeta({
-  middleware: ['auth'],
-});
 </script>

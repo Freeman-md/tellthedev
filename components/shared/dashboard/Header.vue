@@ -15,7 +15,7 @@
 
       <USelectMenu
         v-if="shouldShowProjectSelector"
-        v-model="selectedProject"
+        v-model="activeProject"
         :items="projects"
         class="w-40 hidden md:block"
       />
@@ -43,14 +43,11 @@
 <script setup lang="ts">
 import { useLogout } from '#imports'
 import type { DropdownMenuItem } from '@nuxt/ui'
-import { ref } from 'vue'
 
 const { logout } = useLogout()
 const route = useRoute()
 
-
-const projects = ref(["TellTheDev", "Freemancodz", "FileTidy"])
-const selectedProject = ref("TellTheDev")
+const { projectNames: projects, activeProject } = useProjects()
 
 const { toggleSidebar } = useSidebar()
 

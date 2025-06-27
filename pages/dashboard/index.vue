@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { defineShortcuts } from "#imports";
-import { onMounted, ref, type ComponentPublicInstance } from "vue";
 import EmptyState from "~/components/ui/EmptyState.vue";
 import ErrorState from "~/components/ui/ErrorState.vue";
 import LoadingSpinner from "~/components/ui/LoadingSpinner.vue";
-import { useProjects } from "~/composables/useProjects";
 
 const inputRef = ref<ComponentPublicInstance | null>(null)
 
@@ -18,17 +15,13 @@ defineShortcuts({
 const {
   projects,
   isFetchingUserProjects,
-  fetchUserProjects,
+  
   fetchUserProjectsError,
 } = useProjects();
 
 const reloadPage = () => {
   window.location.reload();
 };
-
-onMounted(() => {
-  fetchUserProjects();
-});
 </script>
 
 <template>

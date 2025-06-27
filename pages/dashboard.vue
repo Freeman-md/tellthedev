@@ -4,6 +4,14 @@
 
 <script setup lang="ts">
 definePageMeta({
-    layout: 'dashboard'
+    layout: 'dashboard',
+    middleware: ['auth']
+})
+
+const { fetchUserProjects } = useProjects()
+
+onMounted(() => {
+    console.log('fetching user projects')
+    fetchUserProjects()
 })
 </script>

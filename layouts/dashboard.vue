@@ -1,6 +1,10 @@
 <template>
   <div class="flex flex-col md:flex-row h-screen">
-    <component :is="sidebarComponent" :is-open="isSidebarOpen" @close="closeSidebar" />
+    <component
+      :is="sidebarComponent"
+      :is-open="isSidebarOpen"
+      @close="closeSidebar"
+    />
 
     <Transition name="fade">
       <div
@@ -14,7 +18,9 @@
       <SharedDashboardHeader @toggle-sidebar="toggleSidebar" />
 
       <main class="flex-1 p-6">
-        <slot />
+        <component :is="shouldShowGuard ? UiSelectProjectGuard : 'div'">
+          <slot v-if="!shouldShowGuard" />
+        </component>
       </main>
 
       <SharedDashboardFooter />
@@ -23,34 +29,40 @@
 </template>
 
 <script setup lang="ts">
-import SharedDashboardSidebar from '@/components/shared/dashboard/Sidebar.vue'
-import SharedProjectSidebar from '@/components/shared/project/Sidebar.vue'
+import { useSidebar } from "@/composables/useSidebar";
+import { useProjects } from "@/composables/useProjects";
 
-const { isSidebarOpen, closeSidebar, toggleSidebar } = useSidebar()
+import SharedDashboardSidebar from "@/components/shared/dashboard/Sidebar.vue";
+import SharedProjectSidebar from "@/components/shared/project/Sidebar.vue";
+import UiSelectProjectGuard from "@/components/ui/SelectProjectGuard.vue";
 
+const { isSidebarOpen, closeSidebar, toggleSidebar } = useSidebar();
+const { activeProject } = useProjects();
 
-const handleKeydown = (e: KeyboardEvent) => {
-  if (e.key === 'Escape') isSidebarOpen.value = false
-}
+const route = useRoute();
 
-onMounted(() => window.addEventListener('keydown', handleKeydown))
-onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
+const isProjectRoute = computed(() =>
+  route.path.startsWith("/dashboard/projects/")
+);
 
-watch(isSidebarOpen, (open) => {
-  document.body.style.overflow = open ? 'hidden' : ''
-})
-
-const route = useRoute()
+const shouldShowGuard = computed(
+  () => isProjectRoute.value && !activeProject.value
+);
 
 const sidebarComponent = computed(() =>
-{
-  console.log(route.path, route.path.includes('/dashboard/projects/'))
+  isProjectRoute.value ? SharedProjectSidebar : SharedDashboardSidebar
+);
 
-  return route.path.includes('/dashboard/projects/')
-    ? SharedProjectSidebar
-    : SharedDashboardSidebar
-}
-)
+const handleKeydown = (e: KeyboardEvent) => {
+  if (e.key === "Escape") isSidebarOpen.value = false;
+};
+
+onMounted(() => window.addEventListener("keydown", handleKeydown));
+onUnmounted(() => window.removeEventListener("keydown", handleKeydown));
+
+watch(isSidebarOpen, (open) => {
+  document.body.style.overflow = open ? "hidden" : "";
+});
 </script>
 
 <style scoped>

@@ -7,6 +7,6 @@ export default defineNuxtRouteMiddleware((to) => {
   const isResetPassword = to.path === '/auth/reset-password' && to.query.code
 
   if (user.value && isAuthPage && !isResetPassword) {
-    return navigateTo('/')
+    return navigateTo('/dashboard')
   }
 })

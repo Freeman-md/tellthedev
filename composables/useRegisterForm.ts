@@ -63,6 +63,8 @@ export const useRegisterForm = () => {
       toast.add({
         title: '✅ Account created. Check your inbox for verification.',
       })
+
+      navigateTo('/auth/login')
     } catch (err) {
       toast.add({
         title: `Unexpected error: ${err}`,

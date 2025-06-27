@@ -4,7 +4,7 @@ import { ProjectService } from '@/services/project-service'
 export const useProjects = () => {
   const user = useSupabaseUser()
   const service = new ProjectService()
-  const activeProject = useState<string | null>('active-project', () => null);
+  const activeProject = useState<string>('active-project');
   const projects = useState<Project[]>('projects', () => [])
 
   const {
@@ -31,9 +31,24 @@ export const useProjects = () => {
     })
   }
 
+  const projectNames = computed(() => {
+    return projects.value.map(project => project.name)
+  })
+
+  watch(activeProject, (newValue) => {
+  if (newValue) {
+    const selected = projects.value.find(p => p.name === newValue)
+    if (selected) {
+      navigateTo(`/dashboard/projects/${selected.slug}`)
+    }
+  }
+})
+
+
 
   return {
     projects,
+    projectNames,
     isFetchingUserProjects,
     fetchUserProjects,
     refreshUserProjects,
