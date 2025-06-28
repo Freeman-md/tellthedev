@@ -29,9 +29,9 @@ const navigationItems = computed<NavigationMenuItem[][]>(() => [
       icon: "i-lucide-settings",
       children: [
         {
-          label: "Widget Settings",
+          label: "Project Settings",
           icon: "i-lucide-sliders-horizontal",
-          to: `/dashboard/projects/${projectSlug.value}/widget-settings`,
+          to: `/dashboard/projects/${projectSlug.value}/project-settings`,
         },
         {
           label: "Allowed Origins",
