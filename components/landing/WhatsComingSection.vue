@@ -1,7 +1,7 @@
 <template>
   <section class="w-full bg-neutral-50 py-16 border-t border-neutral-100">
     <div class="max-w-2xl mx-auto px-4">
-      <h2 class="text-2xl font-bold text-neutral-900 mb-6">Coming soon:</h2>
+      <h2 class="text-2xl font-bold text-neutral-900 mb-6">What's Coming?</h2>
       <ul class="space-y-4">
         <li class="flex items-start gap-3 text-neutral-800">
           <UIcon name="i-heroicons-sparkles" class="text-primary mt-1" />
