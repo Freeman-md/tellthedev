@@ -1,6 +1,6 @@
 <template>
     <div>
-        <header>This is the default layout</header>
+        <LandingNavbar />
 
         <slot />
     </div>
