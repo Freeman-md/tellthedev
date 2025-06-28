@@ -1,11 +1,11 @@
 <template>
   <div>
     <LandingHeroSection />
-    <PreviewDemoSection />
-    <div class="mt-8">This is the landing page</div>
+    <LandingPreviewDemoSection />
+    <LandingWhatsComingSection />
   </div>
 </template>
 
 <script setup lang="ts">
-import PreviewDemoSection from '~/components/landing/PreviewDemoSection.vue'
+
 </script>
