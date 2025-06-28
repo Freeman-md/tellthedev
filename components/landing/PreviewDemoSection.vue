@@ -20,20 +20,11 @@
         </ul>
         <UButton trailing-icon="material-symbols:arrow-outward" variant="outline">Try it out</UButton>
       </div>
-      <!-- Video Embed -->
+      <!-- Live Video Placeholder -->
       <div class="flex-1 w-full flex justify-center md:justify-end">
-        <div class="w-full max-w-md aspect-video rounded-xl overflow-hidden shadow border border-neutral-200 bg-neutral-50 md:max-w-md sm:max-w-full sm:w-full">
-          <iframe
-            id="demo-video"
-            width="100%"
-            height="100%"
-            src="https://www.youtube.com/embed/hl2d-QiPfQA?enablejsapi=1"
-            title="Demo Video"
-            frameborder="0"
-            allow="autoplay; encrypted-media"
-            allowfullscreen
-          ></iframe>
-        </div>
+        <UCard class="w-full max-w-md min-h-[180px] flex items-center justify-center bg-neutral-50 border border-neutral-200 shadow-sm text-neutral-400 text-lg font-semibold">
+          Live Video coming soon
+        </UCard>
       </div>
     </div>
   </section>
