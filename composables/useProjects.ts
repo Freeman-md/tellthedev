@@ -22,7 +22,7 @@ export const useProjects = () => {
     }))
 
     const invalidOption = {
-      label: '🚨 INVALID PROJECT',
+      label: 'TellTheDev',
       value: 'invalid-project'
     }
 
