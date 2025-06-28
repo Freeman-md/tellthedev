@@ -61,7 +61,7 @@ const reloadPage = () => {
     </div>
 
     <EmptyState v-else message="You haven’t created any projects yet.">
-      <UButton to="/projects/create" icon="i-lucide-plus"
+      <UButton to="/dashboard/new-project" icon="i-lucide-plus"
         >Create Project</UButton
       >
     </EmptyState>
