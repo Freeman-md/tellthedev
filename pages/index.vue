@@ -4,6 +4,7 @@
     <LandingPreviewDemoSection />
     <LandingWhatsComingSection />
     <LandingStayInTheLoopSection />
+    <LandingFooter />
   </div>
 </template>
 
