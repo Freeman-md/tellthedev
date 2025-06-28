@@ -22,7 +22,7 @@
       </li>
       <li>
         <NuxtLink
-          to="feedback"
+          :to="`/dashboard/projects/${projectSlug}/feedback`"
           class="text-sm hover:underline flex items-center gap-2"
         >
           <UIcon name="i-lucide-message-square" class="text-muted-foreground" />
@@ -31,7 +31,7 @@
       </li>
       <li>
         <NuxtLink
-          to="widget-settings"
+          :to="`/dashboard/projects/${projectSlug}/widget-settings`"
           class="text-sm hover:underline flex items-center gap-2"
         >
           <UIcon name="i-lucide-settings" class="text-muted-foreground" />
@@ -40,7 +40,7 @@
       </li>
       <li>
         <NuxtLink
-          to="analytics"
+          :to="`/dashboard/projects/${projectSlug}/analytics`"
           class="text-sm hover:underline flex items-center gap-2"
         >
           <UIcon name="i-lucide-bar-chart" class="text-muted-foreground" />
@@ -50,3 +50,9 @@
     </ul>
   </UCard>
 </template>
+
+<script setup lang="ts">
+
+const { projectSlug } = useProjects()
+
+</script>

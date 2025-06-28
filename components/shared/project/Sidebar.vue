@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
-import { useRoute } from 'vue-router'
 
-const route = useRoute()
-const projectId = route.params.id as string
+const { projectSlug } = useProjects()
 
 const navigationItems: NavigationMenuItem[][] = [
   [
@@ -14,17 +12,17 @@ const navigationItems: NavigationMenuItem[][] = [
     {
       label: "Overview",
       icon: "i-lucide-layout-dashboard",
-      to: `/dashboard/projects/${projectId}`,
+      to: `/dashboard/projects/${projectSlug.value}`,
     },
     {
       label: "Feedback",
       icon: "i-lucide-message-circle",
-      to: `/dashboard/projects/${projectId}/feedback`,
+      to: `/dashboard/projects/${projectSlug.value}/feedback`,
     },
     {
       label: "Analytics",
       icon: "i-lucide-pie-chart",
-      to: `/dashboard/projects/${projectId}/analytics`,
+      to: `/dashboard/projects/${projectSlug.value}/analytics`,
     },
     {
       label: "Settings",
@@ -33,24 +31,24 @@ const navigationItems: NavigationMenuItem[][] = [
         {
           label: "Widget Settings",
           icon: "i-lucide-sliders-horizontal",
-          to: `/dashboard/projects/${projectId}/widget-settings`,
+          to: `/dashboard/projects/${projectSlug.value}/widget-settings`,
         },
         {
           label: "Allowed Origins",
           icon: "i-lucide-globe",
-          to: `/dashboard/projects/${projectId}/origins`,
+          to: `/dashboard/projects/${projectSlug.value}/origins`,
         },
         {
           label: "API Keys",
           icon: "i-lucide-key-round",
-          to: `/dashboard/projects/${projectId}/api-keys`,
+          to: `/dashboard/projects/${projectSlug.value}/api-keys`,
           badge: "soon",
           active: false,
         },
         {
           label: "Branding",
           icon: "i-lucide-paintbrush",
-          to: `/dashboard/projects/${projectId}/branding`,
+          to: `/dashboard/projects/${projectSlug.value}/branding`,
           badge: "soon",
           active: false,
         },
