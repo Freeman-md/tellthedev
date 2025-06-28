@@ -2,11 +2,10 @@
   <div class="space-y-6">
     <!-- Stat Cards -->
     <section
-      class="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6 max-lg:*:last:col-span-full"
+      class="grid sm:grid-cols-2 gap-6"
     >
       <StatCard label="Open Feedback" :value="6" trend="up" :change-percent="20" icon="i-lucide-bug" />
       <StatCard label="Resolved Feedback" :value="6" trend="up" :change-percent="20" icon="i-lucide-check-circle" />
-      <StatCard label="Total Projects" :value="6" trend="up" :change-percent="20" icon="i-lucide-folder" />
     </section>
 
     <!-- Main Grid -->

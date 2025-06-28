@@ -1,5 +1,7 @@
 <template>
-  <section class="h-16 border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between">
+  <section
+    class="h-16 border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between"
+  >
     <div class="flex items-center space-x-2">
       <button
         class="md:hidden text-gray-700 hover:text-black focus:outline-none cursor-pointer mt-3"
@@ -15,8 +17,9 @@
 
       <USelectMenu
         v-if="shouldShowProjectSelector"
-        v-model="activeProject"
-        :items="projects"
+        v-model="projectSlug"
+        :items="projectOptions"
+        value-key="value"
         class="w-40 hidden md:block"
       />
     </div>
@@ -41,32 +44,31 @@
 </template>
 
 <script setup lang="ts">
-import { useLogout } from '#imports'
-import type { DropdownMenuItem } from '@nuxt/ui'
+import { useLogout } from "#imports";
+import type { DropdownMenuItem } from "@nuxt/ui";
 
-const { logout } = useLogout()
-const route = useRoute()
+const { logout } = useLogout();
+const route = useRoute();
 
-const { projectNames: projects, activeProject } = useProjects()
+const { projectOptions, projectSlug } = useProjects();
 
-const { toggleSidebar } = useSidebar()
+const { toggleSidebar } = useSidebar();
 
 const dropdownItems = [
   {
-    label: 'Settings',
-    icon: 'i-lucide-settings-2',
-    to: '/dashboard/account/settings'
+    label: "Settings",
+    icon: "i-lucide-settings-2",
+    to: "/dashboard/account/settings",
   },
   {
-    label: 'Logout',
-    icon: 'material-symbols:logout-rounded',
-    color: 'primary',
-    onSelect: logout
-  }
-] satisfies DropdownMenuItem[]
+    label: "Logout",
+    icon: "material-symbols:logout-rounded",
+    color: "primary",
+    onSelect: logout,
+  },
+] satisfies DropdownMenuItem[];
 
 const shouldShowProjectSelector = computed(() =>
-  route.path.startsWith('/dashboard/projects/')
-)
-
+  route.path.startsWith("/dashboard/projects/")
+);
 </script>

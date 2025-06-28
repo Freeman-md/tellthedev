@@ -16,12 +16,13 @@
       </NuxtLink>
 
       <div
-        v-if="projects?.length"
+        v-if="projectOptions?.length"
         class="flex items-center justify-between md:hidden mb-4 space-x-4"
       >
         <USelectMenu
-          v-model="activeProject!"
-          :items="projects"
+          v-model="projectSlug"
+          :items="projectOptions"
+          value-key="value"
           :content="{ align: 'start' }"
           placeholder="Select project"
           class="w-full"
@@ -45,12 +46,11 @@ import type { NavigationMenuItem } from "@nuxt/ui";
 defineProps<{
   navigationItems: NavigationMenuItem[][];
   showProjectSelect?: boolean;
-  projects?: string[];
 }>();
 
 const { isSidebarOpen, closeSidebar } = useSidebar()
 
-const { activeProject } = useProjects()
+const { projectOptions, projectSlug } = useProjects()
 
 const handleCloseSidebar = () => {
   closeSidebar()

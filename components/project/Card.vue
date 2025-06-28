@@ -4,7 +4,7 @@
     arrow
     :content="{ side: 'bottom', sideOffset: 8 }"
     :text="undefined"
-    @click="goToProjectDashboard"
+    @click="handleCardClick"
   >
     <div
       class="border border-gray-200 dark:border-gray-800 rounded-xl p-4 hover:shadow transition cursor-pointer"
@@ -15,11 +15,11 @@
           <p class="text-sm text-gray-500 truncate">@{{ project.slug }}</p>
         </div>
         <UButton
-          :to="`/dashboard/projects/${project.slug}`"
           icon="i-lucide-arrow-right"
           size="sm"
           variant="ghost"
           aria-label="Go to project"
+          :to="`/dashboard/projects/${project.slug}`"
         />
       </div>
 
@@ -75,5 +75,7 @@ const formattedDate = computed(() =>
   formatRelativeTime(project.created_at)
 );
 
-const goToProjectDashboard = () => navigateTo(`/dashboard/projects/${project.slug}`)
+const handleCardClick = () => {
+  navigateTo(`/dashboard/projects/${project.slug}`)
+}
 </script>

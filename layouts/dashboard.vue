@@ -18,9 +18,8 @@
       <SharedDashboardHeader @toggle-sidebar="toggleSidebar" />
 
       <main class="flex-1 p-6">
-        <component :is="shouldShowGuard ? UiSelectProjectGuard : 'div'">
-          <slot v-if="!shouldShowGuard" />
-        </component>
+        <UiSelectProjectGuard v-if="shouldShowGuard" />
+        <slot v-else />
       </main>
 
       <SharedDashboardFooter />
@@ -37,7 +36,7 @@ import SharedProjectSidebar from "@/components/shared/project/Sidebar.vue";
 import UiSelectProjectGuard from "@/components/ui/SelectProjectGuard.vue";
 
 const { isSidebarOpen, closeSidebar, toggleSidebar } = useSidebar();
-const { activeProject } = useProjects();
+const { projects, projectSlug, fetchUserProjects } = useProjects();
 
 const route = useRoute();
 
@@ -46,7 +45,7 @@ const isProjectRoute = computed(() =>
 );
 
 const shouldShowGuard = computed(
-  () => isProjectRoute.value && !activeProject.value
+  () => isProjectRoute.value && !projectSlug.value
 );
 
 const sidebarComponent = computed(() =>
@@ -57,7 +56,12 @@ const handleKeydown = (e: KeyboardEvent) => {
   if (e.key === "Escape") isSidebarOpen.value = false;
 };
 
-onMounted(() => window.addEventListener("keydown", handleKeydown));
+onMounted(() => {
+  if (!projects.value || projects.value.length === 0) {
+    fetchUserProjects();
+  }
+  window.addEventListener("keydown", handleKeydown);
+});
 onUnmounted(() => window.removeEventListener("keydown", handleKeydown));
 
 watch(isSidebarOpen, (open) => {

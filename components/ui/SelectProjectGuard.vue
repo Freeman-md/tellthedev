@@ -6,8 +6,8 @@
     <p class="text-sm text-gray-600 mb-4 max-w-md">
       Please select a project from the dropdown to continue.
     </p>
-    <UButton to="/dashboard/projects" icon="i-lucide-layout-dashboard">
-      Go to Projects
+    <UButton to="/dashboard" icon="i-lucide-layout-dashboard">
+      View Projects
     </UButton>
   </div>
 </template>

@@ -2,10 +2,37 @@ import { useAsyncData, useState, useSupabaseUser } from '#imports'
 import { ProjectService } from '@/services/project-service'
 
 export const useProjects = () => {
+  const projects = useState<Project[]>('projects', () => [])
+  const route = useRoute()
   const user = useSupabaseUser()
   const service = new ProjectService()
-  const activeProject = useState<string>('active-project');
-  const projects = useState<Project[]>('projects', () => [])
+  const projectSlug = computed<string>({
+  get: () => decodeURIComponent(route.params?.slug as string),
+  set: (newSlug) => {
+    if (!newSlug) return
+    navigateTo(`/dashboard/projects/${newSlug}`)
+  }
+})
+
+
+  const projectOptions = computed(() => {
+    const options = projects.value.map(project => ({
+      label: project.name,
+      value: project.slug
+    }))
+
+    const invalidOption = {
+      label: '🚨 INVALID PROJECT',
+      value: 'invalid-project'
+    }
+
+    return import.meta.dev ? [...options, invalidOption] : options
+  })
+
+  const currentProject = computed(() =>
+    projects.value.find(project => project.slug === projectSlug.value)
+  )
+
 
   const {
     pending: isFetchingUserProjects,
@@ -31,30 +58,17 @@ export const useProjects = () => {
     })
   }
 
-  const projectNames = computed(() => {
-    return projects.value.map(project => project.name)
-  })
-
-  watch(activeProject, (newValue) => {
-  if (newValue) {
-    const selected = projects.value.find(p => p.name === newValue)
-    if (selected) {
-      navigateTo(`/dashboard/projects/${selected.slug}`)
-    }
-  }
-})
-
-
 
   return {
     projects,
-    projectNames,
+    currentProject,
+    projectSlug,
+    projectOptions,
     isFetchingUserProjects,
     fetchUserProjects,
     refreshUserProjects,
     fetchUserProjectsError,
     fetchUserProjectsStatus,
     addProject,
-    activeProject,
   }
 }
