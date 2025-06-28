@@ -18,7 +18,7 @@
     <!-- Rounded bottom -->
     <div class="absolute left-0 right-0 bottom-0 h-24 bg-white rounded-b-[30rem] z-10 shadow-lg" style="pointer-events:none;"></div>
     <!-- Overlapping dashboard screenshot -->
-    <div class="absolute left-1/2 -translate-x-1/2 -bottom-32 z-20 w-full flex justify-center">
+    <div class="absolute left-1/2 -translate-x-1/2 -bottom-32 z-20 w-full flex justify-center px-4 md:px-0">
       <div class="w-full max-w-3xl rounded-2xl overflow-hidden shadow-xl border border-neutral-200 bg-white">
         <NuxtImg src="/images/dashboard.png" alt="Dashboard Preview" class="w-full object-cover object-top h-[220px]" />
       </div>

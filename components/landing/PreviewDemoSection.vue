@@ -2,7 +2,7 @@
   <section id="demo-section" class="w-full bg-white py-16 border-t border-neutral-100 mt-40">
     <div class="max-w-4xl mx-auto px-4 flex flex-col md:flex-row items-center gap-10">
       <!-- Features List -->
-      <div class="flex-1">
+      <div class="flex-1 w-full">
         <h2 class="text-2xl font-bold text-neutral-900 mb-4">🛠️ Here's a preview of what's working:</h2>
         <ul class="space-y-3 mb-6">
           <li class="flex items-center gap-2 text-base text-neutral-700">
@@ -21,8 +21,8 @@
         <UButton trailing-icon="material-symbols:arrow-outward" variant="outline">Try it out</UButton>
       </div>
       <!-- Video Embed -->
-      <div class="flex-1 flex justify-center">
-        <div class="w-full max-w-md aspect-video rounded-xl overflow-hidden shadow border border-neutral-200 bg-neutral-50">
+      <div class="flex-1 w-full flex justify-center md:justify-end">
+        <div class="w-full max-w-md aspect-video rounded-xl overflow-hidden shadow border border-neutral-200 bg-neutral-50 md:max-w-md sm:max-w-full sm:w-full">
           <iframe
             id="demo-video"
             width="100%"
