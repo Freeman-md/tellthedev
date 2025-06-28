@@ -1,5 +1,5 @@
 <template>
-  <section id="demo-section" class="w-full bg-white py-16 border-t border-neutral-100">
+  <section id="demo-section" class="w-full bg-white py-16 border-t border-neutral-100 mt-40">
     <div class="max-w-4xl mx-auto px-4 flex flex-col md:flex-row items-center gap-10">
       <!-- Features List -->
       <div class="flex-1">
@@ -18,7 +18,7 @@
             Works in dev, staging, or live — you choose
           </li>
         </ul>
-        <p class="text-neutral-500 text-sm font-semibold">Try it out</p>
+        <UButton trailing-icon="material-symbols:arrow-outward" variant="outline">Try it out</UButton>
       </div>
       <!-- Video Embed -->
       <div class="flex-1 flex justify-center">

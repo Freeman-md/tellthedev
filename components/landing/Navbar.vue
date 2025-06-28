@@ -12,8 +12,8 @@
       </div>
       <!-- Actions -->
       <div class="flex items-center gap-3">
-        <NuxtLink to="/auth/login" class="px-4 py-1.5 rounded font-medium text-neutral-700 hover:text-primary transition">Log In</NuxtLink>
-        <UButton to="/auth/register" color="primary" class="font-semibold">Get Started</UButton>
+        <UButton to="/auth/login" variant="outline">Log In</UButton>
+        <UButton to="/auth/register" class="font-semibold">Get Started</UButton>
       </div>
     </div>
   </nav>

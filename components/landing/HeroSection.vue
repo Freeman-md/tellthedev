@@ -16,11 +16,11 @@
       </UButton>
     </div>
     <!-- Rounded bottom -->
-    <div class="absolute left-0 right-0 bottom-0 h-24 bg-white rounded-b-[3rem] z-10 shadow-lg" style="pointer-events:none;"></div>
+    <div class="absolute left-0 right-0 bottom-0 h-24 bg-white rounded-b-[30rem] z-10 shadow-lg" style="pointer-events:none;"></div>
     <!-- Overlapping dashboard screenshot -->
-    <div class="absolute left-1/2 -translate-x-1/2 bottom-[-72px] z-20 w-full flex justify-center">
+    <div class="absolute left-1/2 -translate-x-1/2 -bottom-32 z-20 w-full flex justify-center">
       <div class="w-full max-w-3xl rounded-2xl overflow-hidden shadow-xl border border-neutral-200 bg-white">
-        <img src="/images/dashboard.png" alt="Dashboard Preview" class="w-full object-cover object-top" style="height:220px;" />
+        <NuxtImg src="/images/dashboard.png" alt="Dashboard Preview" class="w-full object-cover object-top h-[220px]" />
       </div>
     </div>
   </section>
