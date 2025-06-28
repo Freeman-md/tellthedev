@@ -3,7 +3,7 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 
 const { projectSlug } = useProjects()
 
-const navigationItems: NavigationMenuItem[][] = [
+const navigationItems = computed<NavigationMenuItem[][]>(() => [
   [
     {
       label: "Project",
@@ -69,7 +69,7 @@ const navigationItems: NavigationMenuItem[][] = [
       target: "_blank",
     },
   ],
-]
+])
 </script>
 
 <template>
