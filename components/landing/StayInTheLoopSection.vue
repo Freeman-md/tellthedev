@@ -15,9 +15,6 @@
         />
         <UButton type="submit" color="primary">Keep me updated</UButton>
       </form>
-      <UAlert v-if="submitted" color="primary" variant="soft" class="w-full text-center mt-2 bg-white text-primary border-white border">
-        Thanks! You'll be the first to know.
-      </UAlert>
     </div>
   </section>
 </template>
@@ -27,11 +24,15 @@ import { ref } from 'vue'
 
 const email = ref('')
 const submitted = ref(false)
+const { submit } = useWaitlist()
 
-function submitEmail() {
-  // Placeholder: handle email submission (API, etc.)
-  submitted.value = true
-  setTimeout(() => (submitted.value = false), 4000)
-  email.value = ''
+async function submitEmail() {
+  if (!email.value) return
+  const ok = await submit(email.value)
+  if (ok) {
+    submitted.value = true
+    setTimeout(() => (submitted.value = false), 4000)
+    email.value = ''
+  }
 }
 </script> 
