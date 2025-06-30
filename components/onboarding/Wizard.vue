@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { navigateTo, useProjects, useToast } from "#imports";
-import { useOnboardingStepper } from "@/composables/useOnboardingStepper";
-import { useOnboardingForm } from "@/composables/useOnboardingForm";
+import { navigateTo } from "#imports";
 import OnboardingNavButtons from "./NavButtons.vue";
-import type { WidgetSettingsPayload } from "@/types/widget-settings";
 
+const emit = defineEmits(['project-created'])
 const isCreating = ref(false);
 const projectCreated = ref<Project | null>(null);
 const { createProject } = useProjects();
@@ -56,6 +53,7 @@ const handleCreateProject = async () => {
   try {
     const result = await createProject(projectPayload, widgetSettingsPayload);
     projectCreated.value = result;
+    emit('project-created', result)
 
     stepper.value?.next();
 

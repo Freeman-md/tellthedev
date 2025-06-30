@@ -6,12 +6,12 @@
         <NuxtImg src="/images/logo.svg" width="150" class="mx-auto mb-4" alt="Logo" />
       </NuxtLink>
 
-      <div class="backdrop-blur-md bg-white border border-white rounded-2xl shadow-xl p-6 md:p-8 w-full max-w-2xl">
+      <div class="backdrop-blur-2xl bg-white/90 border border-white rounded-2xl shadow-xl p-6 md:p-8 w-full max-w-2xl">
         <SharedPageTitle
           title="Let’s Get You Set Up"
           subtitle="Configure your widget and personalize your setup"
         />
-        <OnboardingWizard />
+        <OnboardingWizard @project-created="handleOnboardingComplete" />
       </div>
       
     </div>
@@ -22,4 +22,15 @@
 definePageMeta({
   layout: 'empty'
 })
+
+const { completeOnboarding } = useProfile()
+
+const handleOnboardingComplete = async () => {
+  try {
+    await completeOnboarding()
+  } catch (err) {
+    console.error('Failed to mark onboarding as complete', err)
+  }
+}
+
 </script>
