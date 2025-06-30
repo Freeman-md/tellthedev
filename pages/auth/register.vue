@@ -55,12 +55,11 @@
 
 <script setup lang="ts">
 import { definePageMeta, useRegisterForm } from "#imports";
-import AuthenticateWithGoogle from '~/components/auth/AuthenticateWithGoogle.vue';
+import AuthenticateWithGoogle from "@/components/auth/AuthenticateWithGoogle.vue";
 
 definePageMeta({
   layout: "auth",
 });
 
-const { form, errors, isSubmitting, handleSubmit } = useRegisterForm()
-
+const { form, errors, isSubmitting, handleSubmit } = useRegisterForm();
 </script>

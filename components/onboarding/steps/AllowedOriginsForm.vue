@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormError } from "@nuxt/ui";
-import { isValidDomain } from "~/shared/utils";
+import { isValidDomain } from "@/shared/utils";
 
 const modelValue = defineModel<{
   origins: string[];

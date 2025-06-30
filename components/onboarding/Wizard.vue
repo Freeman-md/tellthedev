@@ -4,7 +4,7 @@ import { navigateTo, useProjects, useToast } from "#imports";
 import { useOnboardingStepper } from "@/composables/useOnboardingStepper";
 import { useOnboardingForm } from "@/composables/useOnboardingForm";
 import OnboardingNavButtons from "./NavButtons.vue";
-import type { WidgetSettingsPayload } from "~/types/widget-settings";
+import type { WidgetSettingsPayload } from "@/types/widget-settings";
 
 const isCreating = ref(false);
 const projectCreated = ref<Project | null>(null);
@@ -50,7 +50,8 @@ const handleCreateProject = async () => {
     origins: formData.value.origins,
   };
 
-  const widgetSettingsPayload: WidgetSettingsPayload = formData.value.widgetSettings as WidgetSettingsPayload
+  const widgetSettingsPayload: WidgetSettingsPayload = formData.value
+    .widgetSettings as WidgetSettingsPayload;
 
   try {
     const result = await createProject(projectPayload, widgetSettingsPayload);
@@ -115,8 +116,8 @@ const previewWidget = () => {
   window.open(
     `https://widget-preview.tellthedev.com/${projectCreated.value?.api_key_dev}`,
     "_blank"
-  )
-}
+  );
+};
 
 const resetWizard = () => {
   resetForm();
@@ -167,7 +168,9 @@ const resetWizard = () => {
       </template>
 
       <template #finish-setup>
-        <div class="min-h-[30vh] overflow-auto flex flex-col justify-between gap-6">
+        <div
+          class="min-h-[30vh] overflow-auto flex flex-col justify-between gap-6"
+        >
           <OnboardingStepsInstallationInstructions
             :project="{
               slug: projectCreated?.slug!,

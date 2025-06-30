@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { definePageMeta, useSupabaseClient, useToast } from "#imports";
-import AuthInput from "~/components/auth/AuthInput.vue";
+import AuthInput from "@/components/auth/AuthInput.vue";
 
 definePageMeta({
   layout: "auth",
@@ -70,7 +70,7 @@ const handleSubmit = async () => {
     error.value = supabaseError.message;
   } else {
     toast.add({ title: "Check your email to reset your password." });
-    email.value = ""
+    email.value = "";
   }
 
   isSubmitting.value = false;

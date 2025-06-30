@@ -1,4 +1,4 @@
-import { addToWaitlist } from '~/services/waitlist-service'
+import { addToWaitlist } from '@/services/waitlist-service'
 
 export function useWaitlist() {
   const toast = useToast()

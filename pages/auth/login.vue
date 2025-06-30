@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { definePageMeta, useLoginForm } from '#imports'
-import AuthenticateWithGoogle from '~/components/auth/AuthenticateWithGoogle.vue';
+import { definePageMeta, useLoginForm } from "#imports";
+import AuthenticateWithGoogle from "@/components/auth/AuthenticateWithGoogle.vue";
 
 definePageMeta({
-  layout: 'auth',
-})
+  layout: "auth",
+});
 
-const { form, errors, isSubmitting, handleSubmit } = useLoginForm()
+const { form, errors, isSubmitting, handleSubmit } = useLoginForm();
 </script>
 
 <template>
@@ -36,7 +36,11 @@ const { form, errors, isSubmitting, handleSubmit } = useLoginForm()
 
       <div class="flex justify-between">
         <UCheckbox label="Remember me" />
-        <NuxtLink class="hover:underline text-primary" to="/auth/forgot-password">Forgot Password?</NuxtLink>
+        <NuxtLink
+          class="hover:underline text-primary"
+          to="/auth/forgot-password"
+          >Forgot Password?</NuxtLink
+        >
       </div>
 
       <div class="mt-4 space-y-4">

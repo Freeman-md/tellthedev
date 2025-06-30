@@ -1,7 +1,7 @@
 import { useAsyncData, useState, useSupabaseUser } from '#imports'
 import { ProjectService } from '@/services/project-service'
-import { WidgetSettingsService } from '~/services/widget-settings-service'
-import type { WidgetSettingsPayload } from '~/types/widget-settings'
+import { WidgetSettingsService } from '@/services/widget-settings-service'
+import type { WidgetSettingsPayload } from '@/types/widget-settings'
 
 export const useProjects = () => {
   const projects = useState<Project[]>('projects', () => [])
@@ -10,12 +10,12 @@ export const useProjects = () => {
   const projectService = new ProjectService()
   const widgetSettingsService = new WidgetSettingsService()
   const projectSlug = computed<string>({
-  get: () => decodeURIComponent(route.params?.slug as string),
-  set: (newSlug) => {
-    if (!newSlug) return
-    navigateTo(`/dashboard/projects/${newSlug}`)
-  }
-})
+    get: () => decodeURIComponent(route.params?.slug as string),
+    set: (newSlug) => {
+      if (!newSlug) return
+      navigateTo(`/dashboard/projects/${newSlug}`)
+    }
+  })
 
 
   const projectOptions = computed(() => {

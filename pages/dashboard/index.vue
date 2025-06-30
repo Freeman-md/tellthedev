@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import EmptyState from "~/components/ui/EmptyState.vue";
-import ErrorState from "~/components/ui/ErrorState.vue";
-import LoadingSpinner from "~/components/ui/LoadingSpinner.vue";
+import EmptyState from "@/components/ui/EmptyState.vue";
+import ErrorState from "@/components/ui/ErrorState.vue";
+import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
 
-const inputRef = ref<ComponentPublicInstance | null>(null)
+const inputRef = ref<ComponentPublicInstance | null>(null);
 
 defineShortcuts({
   "/": () => {
-    const inputEl = inputRef.value?.$el?.querySelector('input') as HTMLInputElement | null;
+    const inputEl = inputRef.value?.$el?.querySelector(
+      "input"
+    ) as HTMLInputElement | null;
     inputEl?.focus();
   },
 });
@@ -15,7 +17,7 @@ defineShortcuts({
 const {
   projects,
   isFetchingUserProjects,
-  
+
   fetchUserProjectsError,
 } = useProjects();
 
@@ -27,7 +29,9 @@ const reloadPage = () => {
 <template>
   <div>
     <div class="flex space-x-4 items-center mb-6">
-      <UButton to="/dashboard/new-project" icon="i-lucide-plus">New Project</UButton>
+      <UButton to="/dashboard/new-project" icon="i-lucide-plus"
+        >New Project</UButton
+      >
 
       <UInput ref="inputRef" icon="i-lucide-search" placeholder="Search...">
         <template #trailing>

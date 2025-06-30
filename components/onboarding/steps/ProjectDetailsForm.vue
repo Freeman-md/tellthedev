@@ -1,47 +1,50 @@
 <script setup lang="ts">
-import type { FormError } from '@nuxt/ui'
-import { computed, ref } from 'vue'
-import { slugify } from '~/shared/utils/string'
+import type { FormError } from "@nuxt/ui";
+import { computed, ref } from "vue";
+import { slugify } from "@/shared/utils/string";
 
 const modelValue = defineModel<{
   project: {
-    name: string
-    description: string
-    slug: string
-  }
-}>()
+    name: string;
+    description: string;
+    slug: string;
+  };
+}>();
 
 defineProps<{
-    subtitle: string
-}>()
+  subtitle: string;
+}>();
 
-const project = computed(() => modelValue.value!.project)
+const project = computed(() => modelValue.value!.project);
 
-const formRef = ref()
+const formRef = ref();
 
-watch(() => project.value.name, (newValue) => {
-  project.value.slug = slugify(newValue)
-})
+watch(
+  () => project.value.name,
+  (newValue) => {
+    project.value.slug = slugify(newValue);
+  }
+);
 
 const validate = async () => {
-  const errors: FormError[] = []
+  const errors: FormError[] = [];
 
   if (!project.value.name?.trim()) {
-    errors.push({ name: 'name', message: 'Project name is required' })
+    errors.push({ name: "name", message: "Project name is required" });
   }
 
   if (!project.value.description?.trim()) {
-    errors.push({ name: 'description', message: 'Description is required' })
+    errors.push({ name: "description", message: "Description is required" });
   }
 
-  formRef.value?.setErrors(errors)
+  formRef.value?.setErrors(errors);
 
-  return errors.length === 0
-}
+  return errors.length === 0;
+};
 
 defineExpose({
-  validate
-})
+  validate,
+});
 </script>
 
 <template>
@@ -61,7 +64,7 @@ defineExpose({
       </UFormField>
 
       <UFormField label="Slug (auto-generated)" name="slug">
-        <UInput v-model="project.slug" class="w-full" readonly/>
+        <UInput v-model="project.slug" class="w-full" readonly />
       </UFormField>
     </UForm>
   </div>

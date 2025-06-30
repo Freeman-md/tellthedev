@@ -1,48 +1,51 @@
 <script setup lang="ts">
-import type { CheckboxGroupItem, RadioGroupItem, FormError } from '@nuxt/ui'
-import { computed, ref } from 'vue'
-import type { WidgetSettingsPayload } from '~/types/widget-settings';
+import type { CheckboxGroupItem, RadioGroupItem, FormError } from "@nuxt/ui";
+import { computed, ref } from "vue";
+import type { WidgetSettingsPayload } from "@/types/widget-settings";
 
 const modelValue = defineModel<{
-  widgetSettings: WidgetSettingsPayload
-}>()
+  widgetSettings: WidgetSettingsPayload;
+}>();
 
 defineProps<{
-  subtitle?: string
-}>()
+  subtitle?: string;
+}>();
 
-const formRef = ref()
-const settings = computed(() => modelValue.value!.widgetSettings)
+const formRef = ref();
+const settings = computed(() => modelValue.value!.widgetSettings);
 
 const themeItems = ref<RadioGroupItem[]>([
-  { label: 'System', value: 'system' },
-  { label: 'Light', value: 'light' },
-  { label: 'Dark', value: 'dark' }
-])
+  { label: "System", value: "system" },
+  { label: "Light", value: "light" },
+  { label: "Dark", value: "dark" },
+]);
 
 const positionItems = ref<RadioGroupItem[]>([
-  { label: 'Bottom Right', value: 'bottom-right' },
-  { label: 'Bottom Left', value: 'bottom-left' }
-])
+  { label: "Bottom Right", value: "bottom-right" },
+  { label: "Bottom Left", value: "bottom-left" },
+]);
 
 const typeItems = ref<CheckboxGroupItem[]>([
-  { label: 'Bug', value: 'bug' },
-  { label: 'Idea', value: 'idea' },
-  { label: 'Other', value: 'other' }
-])
+  { label: "Bug", value: "bug" },
+  { label: "Idea", value: "idea" },
+  { label: "Other", value: "other" },
+]);
 
 const validate = async () => {
-  const errors: FormError[] = []
+  const errors: FormError[] = [];
 
   if (settings.value.defaultTypes.length === 0) {
-    errors.push({ name: 'defaultTypes', message: 'Please select at least one feedback type' })
+    errors.push({
+      name: "defaultTypes",
+      message: "Please select at least one feedback type",
+    });
   }
 
-  formRef.value?.setErrors(errors)
-  return errors.length === 0
-}
+  formRef.value?.setErrors(errors);
+  return errors.length === 0;
+};
 
-defineExpose({ validate })
+defineExpose({ validate });
 </script>
 
 <template>

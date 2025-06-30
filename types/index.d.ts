@@ -19,6 +19,13 @@ declare global {
         confirmPassword: string;
     }
 
+    type Profile = {
+        id: string
+        onboarding_complete: boolean
+        created_at: string
+    }
+
+
     type FeedbackEntry = import('./feedback').FeedbackEntry;
 
     type Project = import('./project').Project;

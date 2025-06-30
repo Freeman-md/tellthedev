@@ -1,5 +1,4 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { useSupabaseClient } from '#imports'
 
 export class WidgetSettingsService {
   private supabase: SupabaseClient
