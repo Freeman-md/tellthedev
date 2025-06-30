@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FormError } from '@nuxt/ui'
 import { computed, ref } from 'vue'
+import { slugify } from '~/shared/utils/string'
 
 const modelValue = defineModel<{
   project: {
@@ -17,6 +18,10 @@ defineProps<{
 const project = computed(() => modelValue.value!.project)
 
 const formRef = ref()
+
+watch(() => project.value.name, (newValue) => {
+  project.value.slug = slugify(newValue)
+})
 
 const validate = async () => {
   const errors: FormError[] = []
@@ -55,8 +60,8 @@ defineExpose({
         <UTextarea v-model="project.description" autoresize class="w-full" />
       </UFormField>
 
-      <UFormField label="Slug (optional)" name="slug" description="Leave blank to auto-generate">
-        <UInput v-model="project.slug" class="w-full" />
+      <UFormField label="Slug (auto-generated)" name="slug">
+        <UInput v-model="project.slug" class="w-full" readonly/>
       </UFormField>
     </UForm>
   </div>

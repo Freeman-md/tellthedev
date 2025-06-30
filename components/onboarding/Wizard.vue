@@ -1,9 +1,5 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import ProjectDetailsForm from "./steps/ProjectDetailsForm.vue";
-import AllowedOriginsForm from "./steps/AllowedOriginsForm.vue";
-import WidgetSettingsForm from "./steps/WidgetSettingsForm.vue";
-import InstallationInstructions from "./steps/InstallationInstructions.vue";
 import { navigateTo, useProjects, useToast } from "#imports";
 import { useOnboardingStepper } from "@/composables/useOnboardingStepper";
 import { useOnboardingForm } from "@/composables/useOnboardingForm";
@@ -113,11 +109,12 @@ const handleCreateProject = async () => {
   }
 };
 
-const previewWidget = () =>
+const previewWidget = () => {
   window.open(
     `https://widget-preview.tellthedev.com/${projectCreated.value?.api_key}`,
     "_blank"
-  );
+  )
+}
 
 const resetWizard = () => {
   resetForm();
@@ -139,7 +136,7 @@ const resetWizard = () => {
     >
       <template #project-info>
         <div class="min-h-[30vh] overflow-auto">
-          <ProjectDetailsForm
+          <OnboardingStepsProjectDetailsForm
             :ref="stepRefs[0]"
             v-model="formData"
             :subtitle="'Add details about your project to get started'"
@@ -149,7 +146,7 @@ const resetWizard = () => {
 
       <template #allowed-origins>
         <div class="min-h-[30vh] overflow-auto">
-          <AllowedOriginsForm
+          <OnboardingStepsAllowedOriginsForm
             :ref="stepRefs[1]"
             v-model="formData"
             :subtitle="'Specify the domains where your widget is allowed to run'"
@@ -159,7 +156,7 @@ const resetWizard = () => {
 
       <template #widget-settings>
         <div class="min-h-[30vh] overflow-auto">
-          <WidgetSettingsForm
+          <OnboardingStepsWidgetSettingsForm
             :ref="stepRefs[2]"
             v-model="formData"
             :subtitle="'Configure your widget appearance and feedback behavior'"
@@ -169,7 +166,7 @@ const resetWizard = () => {
 
       <template #finish-setup>
         <div class="min-h-[30vh] overflow-auto flex flex-col justify-between gap-6">
-          <InstallationInstructions
+          <OnboardingStepsInstallationInstructions
             :project="{
               slug: projectCreated?.slug!,
               api_key: projectCreated?.api_key!,
