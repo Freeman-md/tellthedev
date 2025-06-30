@@ -177,7 +177,7 @@ const resetWizard = () => {
             :subtitle="'Copy the embed script and launch your widget'"
           />
 
-          <div class="flex justify-between gap-2 mt-4">
+          <div class="grid sm:grid-cols-3 gap-2 mt-4">
             <UButton
               variant="outline"
               icon="i-lucide-arrow-left"
@@ -188,7 +188,7 @@ const resetWizard = () => {
 
             <UButton
               icon="i-lucide-external-link"
-              @click="navigateTo(`/projects/${projectCreated?.slug}`)"
+              @click="navigateTo(`/dashboard/projects/${projectCreated?.slug}`)"
             >
               Go to Project Dashboard
             </UButton>
