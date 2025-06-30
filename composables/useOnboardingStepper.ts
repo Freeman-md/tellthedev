@@ -2,8 +2,6 @@ import { ref, computed, useTemplateRef, type Ref } from 'vue';
 import { useMediaQuery } from '@vueuse/core';
 import type { StepperItem } from '@nuxt/ui';
 
-type UStepperRef = globalThis.UStepperRef;
-
 export function useOnboardingStepper({
   projectCreated
 } : {

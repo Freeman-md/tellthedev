@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import type { CheckboxGroupItem, RadioGroupItem, FormError } from '@nuxt/ui'
 import { computed, ref } from 'vue'
+import type { WidgetSettingsPayload } from '~/types/widget-settings';
 
 const modelValue = defineModel<{
-  widgetSettings: {
-    theme: string
-    position: string
-    allowScreenshot: boolean
-    allowEmail: boolean
-    defaultTypes: string[]
-  }
+  widgetSettings: WidgetSettingsPayload
 }>()
 
 defineProps<{

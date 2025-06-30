@@ -23,6 +23,9 @@ declare global {
 
     type Project = import('./project').Project;
 
+    type WidgetSettings = import('./widget-settings').WidgetSettings;
+    type WidgetSettingsPayload = import('./widget-settings').WidgetSettingsPayload;
+
     type CreateProjectPayload = import('./project').CreateProjectPayload;
 
     type UStepperRef = {

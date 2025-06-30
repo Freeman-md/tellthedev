@@ -4,10 +4,11 @@ import { navigateTo, useProjects, useToast } from "#imports";
 import { useOnboardingStepper } from "@/composables/useOnboardingStepper";
 import { useOnboardingForm } from "@/composables/useOnboardingForm";
 import OnboardingNavButtons from "./NavButtons.vue";
+import type { WidgetSettingsPayload } from "~/types/widget-settings";
 
 const isCreating = ref(false);
 const projectCreated = ref<Project | null>(null);
-const { addProject } = useProjects();
+const { createProject } = useProjects();
 const toast = useToast();
 
 const { formData, resetForm } = useOnboardingForm();
@@ -42,16 +43,17 @@ const handleCreateProject = async () => {
 
   isCreating.value = true;
 
-  const payload = {
+  const projectPayload: CreateProjectPayload = {
     name: formData.value.project.name,
     slug: formData.value.project.slug,
     description: formData.value.project.description,
     origins: formData.value.origins,
-    widget_settings: formData.value.widgetSettings,
   };
 
+  const widgetSettingsPayload: WidgetSettingsPayload = formData.value.widgetSettings as WidgetSettingsPayload
+
   try {
-    const result = await addProject(payload);
+    const result = await createProject(projectPayload, widgetSettingsPayload);
     projectCreated.value = result;
 
     stepper.value?.next();
@@ -66,7 +68,7 @@ const handleCreateProject = async () => {
           label: "Go to Project Dashboard",
           onClick: (e) => {
             e?.stopPropagation();
-            navigateTo(`/projects/${result.slug}`);
+            navigateTo(`/dashboard/projects/${result.slug}`);
           },
         },
       ],
@@ -111,7 +113,7 @@ const handleCreateProject = async () => {
 
 const previewWidget = () => {
   window.open(
-    `https://widget-preview.tellthedev.com/${projectCreated.value?.api_key}`,
+    `https://widget-preview.tellthedev.com/${projectCreated.value?.api_key_dev}`,
     "_blank"
   )
 }
@@ -169,7 +171,7 @@ const resetWizard = () => {
           <OnboardingStepsInstallationInstructions
             :project="{
               slug: projectCreated?.slug!,
-              api_key: projectCreated?.api_key!,
+              api_key: projectCreated?.api_key_dev!,
             }"
             :subtitle="'Copy the embed script and launch your widget'"
           />

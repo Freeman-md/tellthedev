@@ -1,11 +1,14 @@
 import { useAsyncData, useState, useSupabaseUser } from '#imports'
 import { ProjectService } from '@/services/project-service'
+import { WidgetSettingsService } from '~/services/widget-settings-service'
+import type { WidgetSettingsPayload } from '~/types/widget-settings'
 
 export const useProjects = () => {
   const projects = useState<Project[]>('projects', () => [])
   const route = useRoute()
   const user = useSupabaseUser()
-  const service = new ProjectService()
+  const projectService = new ProjectService()
+  const widgetSettingsService = new WidgetSettingsService()
   const projectSlug = computed<string>({
   get: () => decodeURIComponent(route.params?.slug as string),
   set: (newSlug) => {
@@ -43,19 +46,23 @@ export const useProjects = () => {
   } = useAsyncData('user-projects', async () => {
     if (!user.value) throw new Error('User not authenticated')
 
-    projects.value = await service.fetchUserProjects(user.value.id)
+    projects.value = await projectService.fetchUserProjects(user.value.id)
 
   }, {
     immediate: false,
   })
 
-  const addProject = async (payload: CreateProjectPayload) => {
+  const createProject = async (payload: CreateProjectPayload, widgetSettings: WidgetSettingsPayload) => {
     if (!user.value) throw new Error('User not authenticated')
 
-    return await service.createProject({
+    const project = await projectService.createProject({
       ...payload,
       user_id: user.value.id,
     })
+
+    await widgetSettingsService.createForProject(project, widgetSettings)
+
+    return project
   }
 
 
@@ -69,6 +76,6 @@ export const useProjects = () => {
     refreshUserProjects,
     fetchUserProjectsError,
     fetchUserProjectsStatus,
-    addProject,
+    createProject,
   }
 }

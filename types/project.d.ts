@@ -3,12 +3,12 @@ export type Project = {
   name: string;
   slug: string;
   description: string;
-  api_key: string;
+  api_key_dev: string;
+  api_key_live: string;
   user_id: string;
   created_at: string;
   updated_at: string;
   origins: string[];
-  widget_settings: Record<string, unknown>;
 };
 
 export type CreateProjectPayload = {
@@ -17,5 +17,4 @@ export type CreateProjectPayload = {
   slug: string;
   description: string;
   origins: string[];
-  widget_settings: Record<string, unknown>;
 };

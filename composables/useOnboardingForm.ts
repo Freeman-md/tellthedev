@@ -14,7 +14,7 @@ export function useOnboardingForm() {
       allowScreenshot: true,
       allowEmail: false,
       defaultTypes: ['bug', 'idea'],
-    },
+    } as WidgetSettingsPayload,
   });
 
   const resetForm = () => {
