@@ -1,6 +1,3 @@
-import { ref, reactive } from 'vue'
-import { navigateTo, useSupabaseClient, useToast } from '#imports'
-
 export const useLoginForm = () => {
   const isSubmitting = ref(false)
 
@@ -56,7 +53,7 @@ export const useLoginForm = () => {
         title: '✅ Login successful',
       })
 
-      navigateTo('/dashboard')
+await useAuthRedirect()
 
     } catch (err) {
       toast.add({
