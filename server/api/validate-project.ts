@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js'
 import type { H3Event } from 'h3'
+import { getServerSupabase } from '../utils/supabase'
 
 const STATIC_ALLOWED_ORIGINS = [
   'https://tellthedev.vercel.app',
@@ -7,8 +7,6 @@ const STATIC_ALLOWED_ORIGINS = [
 ]
 
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig(event)
-
   const origin = getHeader(event, 'origin') || 'null'
   const isLocal = origin === 'null' || origin.startsWith('http://127.0')
   const isStaticAllowed = STATIC_ALLOWED_ORIGINS.includes(origin)
@@ -27,7 +25,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Missing or invalid projectId' })
   }
 
-  const supabase = createClient(config.supabaseUrl, config.supabaseServiceRoleKey)
+  const supabase = getServerSupabase()
 
   const { data: project, error } = await supabase
     .from('projects')
