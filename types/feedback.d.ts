@@ -3,7 +3,6 @@ export type FeedbackStatus = 'open' | 'in_progress' | 'resolved' | 'ignored';
 export type Sentiment = 'positive' | 'neutral' | 'negative';
 
 export interface FeedbackEntry {
-  [key: string]: unknown;
   id: string; // UUID
   project_id: string; // UUID
   type: FeedbackType;

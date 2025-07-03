@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends Record<string, unknown>">
+<script setup lang="ts" generic="T">
 import { defineShortcuts } from '#imports';
 import { computed, ref, watch, type ComponentPublicInstance } from 'vue';
 import LoadingSpinner from '../ui/LoadingSpinner.vue';
