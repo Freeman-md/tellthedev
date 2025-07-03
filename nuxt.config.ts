@@ -9,6 +9,11 @@ export default defineNuxtConfig({
     '~/assets/css/main.css'
   ],
 
+  runtimeConfig: {
+    supabaseUrl: '',
+    supabaseKey: ''
+  },
+
   modules: [
     '@nuxt/eslint',
     '@nuxt/fonts',
