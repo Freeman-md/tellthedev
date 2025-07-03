@@ -11,7 +11,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     supabaseUrl: '',
-    supabaseKey: ''
+    supabaseServiceRoleKey: ''
   },
 
   modules: [
