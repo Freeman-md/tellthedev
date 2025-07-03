@@ -9,13 +9,11 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const projectId = body?.projectId
 
-  if (!projectId || typeof projectId !== 'string') {
-    throw createError({ statusCode: 400, statusMessage: 'Missing or invalid projectId' })
-  }
 
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-  if (!uuidRegex.test(projectId)) {
-    throw createError({ statusCode: 400, statusMessage: 'Invalid UUID format' })
+
+  if (!projectId || typeof projectId !== 'string' || !uuidRegex.test(projectId)) {
+    throw createError({ statusCode: 400, statusMessage: 'Missing or invalid projectId' })
   }
 
   const supabase = getServerSupabase()
@@ -33,13 +31,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: 'Project not found' })
   }
 
-  const isOriginAllowed =
-    Array.isArray(project.origins) && project.origins.includes(origin)
-
-  if (!isOriginAllowed) {
-    console.warn(`[Reject] Origin not allowed: ${origin} for project ${projectId}`)
-    throw createError({ statusCode: 403, statusMessage: 'Origin not allowed here' })
-  }
+  validateOrigin(origin, project)
 
   return { valid: true }
 })

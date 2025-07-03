@@ -25,6 +25,18 @@ declare global {
         created_at: string
     }
 
+    type UStepperRef = {
+        hasNext: boolean,
+        hasPrev: boolean,
+        next: () => void,
+        prev: () => void
+    }
+
+    type UploadedImage = {
+        name: string
+        type: string
+        stream: () => Readable
+    }
 
     type FeedbackEntry = import('./feedback').FeedbackEntry;
 
@@ -35,11 +47,5 @@ declare global {
 
     type CreateProjectPayload = import('./project').CreateProjectPayload;
 
-    type UStepperRef = {
-        hasNext: boolean,
-        hasPrev: boolean,
-        next: () => void,
-        prev: () => void
-    }
 
 }
