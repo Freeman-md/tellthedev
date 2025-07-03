@@ -1,17 +1,5 @@
-import type { H3Event } from 'h3'
-import { getServerSupabase } from '../utils/supabase'
-
-const STATIC_ALLOWED_ORIGINS = [
-  'https://tellthedev.vercel.app',
-  'http://127.0.0.1:5500',
-]
-
 export default defineEventHandler(async (event) => {
   const origin = getHeader(event, 'origin') || 'null'
-  const isLocal = origin === 'null' || origin.startsWith('http://127.0')
-  const isStaticAllowed = STATIC_ALLOWED_ORIGINS.includes(origin)
-  const isTestMode = getHeader(event, 'x-test-mode') === 'true' && isLocal
-
   setCorsHeaders(event, origin)
 
   if (event.method !== 'POST') {
@@ -25,14 +13,17 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Missing or invalid projectId' })
   }
 
-  const supabase = getServerSupabase()
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  if (!uuidRegex.test(projectId)) {
+    throw createError({ statusCode: 400, statusMessage: 'Invalid UUID format' })
+  }
 
+  const supabase = getServerSupabase()
   const { data: project, error } = await supabase
     .from('projects')
     .select('id, origins')
     .eq('id', projectId)
     .maybeSingle()
-
 
   if (error) {
     throw createError({ statusCode: 500, statusMessage: 'Database query failed: ' + error.message })
@@ -42,24 +33,13 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: 'Project not found' })
   }
 
-  if (!isTestMode) {
-    const dynamicAllowedOrigin = Array.isArray(project.origins) && project.origins.includes(origin)
-      ? origin
-      : null
+  const isOriginAllowed =
+    Array.isArray(project.origins) && project.origins.includes(origin)
 
-    const finalCorsOrigin = isStaticAllowed ? origin : dynamicAllowedOrigin
-
-    if (!finalCorsOrigin) {
-      throw createError({ statusCode: 403, statusMessage: 'Origin not allowed here' })
-    }
+  if (!isOriginAllowed) {
+    console.warn(`[Reject] Origin not allowed: ${origin} for project ${projectId}`)
+    throw createError({ statusCode: 403, statusMessage: 'Origin not allowed here' })
   }
 
   return { valid: true }
 })
-
-const setCorsHeaders = (event: H3Event, origin: string) => {
-  setHeader(event, 'Access-Control-Allow-Origin', origin)
-  setHeader(event, 'Access-Control-Allow-Methods', 'POST, OPTIONS')
-  setHeader(event, 'Access-Control-Allow-Headers', 'content-type, x-test-mode')
-  setHeader(event, 'Vary', 'Origin')
-}

@@ -53,6 +53,10 @@ export default defineNuxtConfig({
       ],
       saveRedirectToCookie: false,
     }
+  },
+
+  imports: {
+    dirs: ['server/utils']
   }
 
 })
