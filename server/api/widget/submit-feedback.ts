@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 405, statusMessage: 'Method Not Allowed' })
   }
 
-  // Extract API Key from Authorization header
+  
   const authHeader = getHeader(event, 'authorization')
   const apiKey = authHeader?.split('Bearer ')[1]?.trim()
 

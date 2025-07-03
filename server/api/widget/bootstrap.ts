@@ -6,7 +6,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 405, statusMessage: 'Method Not Allowed' })
   }
 
-  const { apiKey } = await readBody(event)
+  const authHeader = getHeader(event, 'authorization')
+  const apiKey = authHeader?.split('Bearer ')[1]?.trim()
 
   if (!apiKey || typeof apiKey !== 'string') {
     throw createError({ statusCode: 400, statusMessage: 'Missing or invalid API key' })
