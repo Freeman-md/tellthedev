@@ -2,6 +2,9 @@ import { readBody, getHeader, createError } from 'h3'
 import type { FeedbackType } from '~/types/feedback'
 import { getServerSupabase } from '~/server/utils/supabase'
 
+// Allowed feedback types
+const allowedTypes: FeedbackType[] = ['bug', 'idea', 'praise', 'comment', 'other']
+
 export default defineEventHandler(async (event) => {
   const origin = getHeader(event, 'origin') || 'null'
   setCorsHeaders(event, origin)
@@ -10,17 +13,19 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 405, statusMessage: 'Method Not Allowed' })
   }
 
-  const body = await readBody(event)
+  // Extract API Key from Authorization header
+  const authHeader = getHeader(event, 'authorization')
+  const apiKey = authHeader?.split('Bearer ')[1]?.trim()
 
-  const { projectId, type, content } = body
-  const errors: Record<string, string> = {}
-
-  const allowedTypes: FeedbackType[] = ['bug', 'idea', 'praise', 'comment', 'other']
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-
-  if (!uuidRegex.test(projectId)) {
-    errors.projectId = 'Invalid or missing projectId'
+  if (!apiKey) {
+    throw createError({ statusCode: 401, statusMessage: 'Missing API key' })
   }
+
+  const body = await readBody(event)
+  const { type, content, email, screenshot_url, device_info, referrer_url } = body
+
+  // Validation
+  const errors: Record<string, string> = {}
 
   if (!allowedTypes.includes(type)) {
     errors.type = 'Invalid feedback type'
@@ -35,10 +40,12 @@ export default defineEventHandler(async (event) => {
   }
 
   const supabase = getServerSupabase()
+
+  // Get project by matching either dev or live API key
   const { data: project, error: projectError } = await supabase
     .from('projects')
-    .select('id, origins')
-    .eq('id', projectId)
+    .select('id, origins, api_key_dev, api_key_live')
+    .or(`api_key_dev.eq.${apiKey},api_key_live.eq.${apiKey}`)
     .maybeSingle()
 
   if (projectError) {
@@ -46,19 +53,26 @@ export default defineEventHandler(async (event) => {
   }
 
   if (!project) {
-    throw createError({ statusCode: 404, statusMessage: 'Project not found' })
+    throw createError({ statusCode: 401, statusMessage: 'Invalid API key' })
   }
 
+  // Determine environment
+  const environment = apiKey === project.api_key_live ? 'live' : 'dev'
+
+  // Check origin
   validateOrigin(origin, project)
 
-  const { error: insertError } = await supabase
-    .from('feedback')
-    .insert({
-      project_id: projectId,
-      type,
-      content,
-      screenshot_url: null,
-    })
+  // Save feedback
+  const { error: insertError } = await supabase.from('feedback').insert({
+    project_id: project.id,
+    type,
+    content,
+    environment,
+    email: email ?? null,
+    screenshot_url: screenshot_url ?? null,
+    device_info: device_info ?? null,
+    referrer_url: referrer_url ?? null,
+  })
 
   if (insertError) {
     throw createError({ statusCode: 500, statusMessage: 'Failed to save feedback', data: insertError.message })
