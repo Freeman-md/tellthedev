@@ -1,13 +1,19 @@
 <script setup lang="ts">
-import { formatRelativeTime } from '@/shared/utils';
+import { formatRelativeTime } from "@/shared/utils";
 
 defineProps<{
-  entries: FeedbackEntry[]
-}>()
+  entries: FeedbackEntry[];
+}>();
+
+const goToFeedback = (id: string) => {
+  navigateTo(`feedback/${id}`);
+};
 </script>
 
 <template>
-  <div class="bg-white dark:bg-muted rounded-lg border border-gray-100 p-4 w-full overflow-x-auto">
+  <div
+    class="bg-white dark:bg-muted rounded-lg border border-gray-100 p-4 w-full overflow-x-auto"
+  >
     <UiBaseTable
       :headers="[
         'Type',
@@ -16,15 +22,26 @@ defineProps<{
         'Sentiment',
         'Screenshot',
         'Referrer',
-        'Created At'
+        'Created At',
       ]"
       :data="entries"
-      :searchable-fields="['type', 'status', 'content', 'sentiment', 'referrer_url']"
+      :searchable-fields="[
+        'type',
+        'status',
+        'content',
+        'sentiment',
+        'referrer_url',
+      ]"
       :enable-search="true"
       empty-message="No feedback entries found."
     >
       <template #default="{ rows }">
-        <tr v-for="(entry, index) in rows" :key="entry.id" class="*:py-4 *:pr-4">
+        <tr
+          v-for="(entry, index) in rows"
+          :key="entry.id"
+          class="*:py-4 *:pr-4"
+          @click="goToFeedback(entry.id)"
+        >
           <td>
             <UBadge :label="entry.type" variant="outline" color="neutral" />
           </td>
@@ -47,7 +64,7 @@ defineProps<{
             <span v-else class="text-xs text-gray-400 italic">None</span>
           </td>
           <td>
-            <small>{{ entry.referrer_url || '—' }}</small>
+            <small>{{ entry.referrer_url || "—" }}</small>
           </td>
           <td>
             {{ formatRelativeTime(entry.created_at) }}
