@@ -112,7 +112,7 @@ const handleCreateProject = async () => {
 
 const previewWidget = () => {
   window.open(
-    `https://widget-preview.tellthedev.com/${projectCreated.value?.api_key_dev}`,
+    `${window.location.origin}/widget-preview?api_key=${projectCreated.value?.api_key_dev}`,
     "_blank"
   );
 };
