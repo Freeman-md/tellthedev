@@ -12,7 +12,7 @@ const props = defineProps<{
 
 const embedSnippet = computed(() => {  
   const apiKey = props.project.api_key || 'your-api-key'
-  return `<script src="https://cdn.tellthedev.com/widget.js" data-project-key="${apiKey}" defer><\\/script>`
+  return `<script src="https://tellthedev.vercel.app/widget/script.js" data-project-key="${apiKey}" defer><\\/script>`
 })
 
 const { copy, copied } = useClipboard({ source: embedSnippet })
