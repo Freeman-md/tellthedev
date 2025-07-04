@@ -3,17 +3,21 @@ import type { FeedbackType } from '~/types/feedback'
 import { getServerSupabase } from '~/server/utils/supabase'
 
 // Allowed feedback types
-const allowedTypes: FeedbackType[] = ['bug', 'idea', 'praise', 'comment', 'other']
+const allowedTypes: FeedbackType[] = ['bug', 'idea', 'praise', 'general']
 
 export default defineEventHandler(async (event) => {
   const origin = getHeader(event, 'origin') || 'null'
   setCorsHeaders(event, origin)
 
+  if (event.method === 'OPTIONS') {
+    return new Response(null, { status: 204 });
+  }
+
   if (event.method !== 'POST') {
     throw createError({ statusCode: 405, statusMessage: 'Method Not Allowed' })
   }
 
-  
+
   const authHeader = getHeader(event, 'authorization')
   const apiKey = authHeader?.split('Bearer ')[1]?.trim()
 

@@ -2,8 +2,12 @@ export default defineEventHandler(async (event) => {
   const origin = getHeader(event, 'origin') || 'null'
   setCorsHeaders(event, origin)
 
-  if (event.method !== 'POST') {
-    throw createError({ statusCode: 405, statusMessage: 'Method Not Allowed' })
+  if (event.method === 'OPTIONS') {
+    return new Response(null, { status: 204 });
+  }
+
+  if (event.method !== 'GET') {
+    throw createError({ statusCode: 405, statusMessage: 'Method Not Allowed' });
   }
 
   const authHeader = getHeader(event, 'authorization')
