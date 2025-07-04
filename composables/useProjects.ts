@@ -24,12 +24,7 @@ export const useProjects = () => {
       value: project.slug
     }))
 
-    const invalidOption = {
-      label: 'TellTheDev',
-      value: 'invalid-project'
-    }
-
-    return import.meta.dev ? [...options, invalidOption] : options
+    return import.meta.dev ? [...options] : options
   })
 
   const currentProject = computed(() =>
