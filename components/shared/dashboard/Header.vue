@@ -37,7 +37,11 @@
       </UButton>
 
       <UDropdownMenu :items="dropdownItems">
-        <UAvatar alt="User Name" aria-setsize="md" />
+        <UAvatar
+          :alt="user?.user_metadata?.full_name || user?.email || 'User'"
+          :name="user?.user_metadata?.full_name || user?.email || 'U'"
+          aria-setsize="md"
+        />
       </UDropdownMenu>
     </div>
   </section>
@@ -47,6 +51,7 @@
 import { useLogout } from "#imports";
 import type { DropdownMenuItem } from "@nuxt/ui";
 
+const user = useSupabaseUser();
 const { logout } = useLogout();
 const route = useRoute();
 
