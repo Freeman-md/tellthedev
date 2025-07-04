@@ -39,6 +39,8 @@ declare global {
     }
 
     type FeedbackEntry = import('./feedback').FeedbackEntry;
+    type FeedbackReplyTemplate = import('./feedback').FeedbackReplyTemplate;
+    type FeedbackTimelineEntry = import('./feedback').FeedbackTimelineEntry;
 
     type Project = import('./project').Project;
 

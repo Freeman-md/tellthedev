@@ -18,3 +18,20 @@ export interface FeedbackEntry {
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
 }
+
+export interface FeedbackTimelineEntry {
+  id: string
+  feedback_id: string
+  event: string
+  status: string | null
+  message?: string | null
+  created_at: string
+}
+
+export interface FeedbackReplyTemplate {
+  id: string
+  project_id: string
+  label: string
+  content: string
+  created_at: string
+}

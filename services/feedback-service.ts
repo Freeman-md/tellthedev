@@ -19,4 +19,37 @@ export class FeedbackService {
     if (error) throw error
     return data as FeedbackEntry[]
   }
+
+  async getFeedbackById(id: string): Promise<FeedbackEntry> {
+    const { data, error } = await this.supabase
+      .from('feedback')
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    if (error) throw error
+    return data as FeedbackEntry
+  }
+
+  async getTimelineForFeedback(feedbackId: string): Promise<FeedbackTimelineEntry[]> {
+    const { data, error } = await this.supabase
+      .from('feedback_timeline')
+      .select('*')
+      .eq('feedback_id', feedbackId)
+      .order('created_at', { ascending: true })
+
+    if (error) throw error
+    return data as FeedbackTimelineEntry[]
+  }
+
+  async getReplyTemplatesForProject(projectId: string): Promise<FeedbackReplyTemplate[]> {
+    const { data, error } = await this.supabase
+      .from('feedback_reply_templates')
+      .select('*')
+      .eq('project_id', projectId)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+    return data as FeedbackReplyTemplate[]
+  }
 }
