@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <template #content>
+    <!-- <template #content>
       <div
         class="space-y-2 text-sm leading-relaxed bg-white dark:bg-gray-900 p-4 shadow-xl rounded-md max-w-xs"
       >
@@ -59,7 +59,7 @@
           Upgrade now
         </UButton>
       </div>
-    </template>
+    </template> -->
   </UTooltip>
 </template>
 
