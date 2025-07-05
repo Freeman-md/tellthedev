@@ -52,7 +52,6 @@ export default defineEventHandler(async (event) => {
   return {
     valid: true,
     environment,
-    projectId: project.id,
     settings: settings.settings,
   }
 })
