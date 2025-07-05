@@ -10,10 +10,18 @@ export const setCorsHeaders = (event: H3Event, origin: string) => {
 }
 
 export function validateOrigin(origin: string, project: { origins: string[] }) {
-    if (!Array.isArray(project.origins) || !project.origins.includes(origin)) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: `Origin not allowed: ${origin}`,
-        })
-    }
+  const allowedPreviewOrigin = 'https://tellthedev.vercel.app'
+
+  const isAllowedOrigin =
+    Array.isArray(project.origins) && project.origins.includes(origin)
+
+  const isPreview =
+    process.env.NODE_ENV !== 'production' || origin === allowedPreviewOrigin
+
+  if (!isAllowedOrigin && !isPreview) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: `Origin not allowed: ${origin}`,
+    })
+  }
 }
