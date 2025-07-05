@@ -10,9 +10,10 @@ export default defineNuxtConfig({
   ],
 
   runtimeConfig: {
-    supabaseUrl: '',
-    supabaseServiceRoleKey: ''
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseServiceRoleKey: process.env.SUPABASE_KEY
   },
+
 
   modules: [
     '@nuxt/eslint',
