@@ -15,8 +15,7 @@ export function validateOrigin(origin: string, project: { origins: string[] }) {
   const isAllowedOrigin =
     Array.isArray(project.origins) && project.origins.includes(origin)
 
-  const isPreview =
-    process.env.NODE_ENV !== 'production' || origin === allowedPreviewOrigin
+  const isPreview = origin === allowedPreviewOrigin
 
   if (!isAllowedOrigin && !isPreview) {
     throw createError({

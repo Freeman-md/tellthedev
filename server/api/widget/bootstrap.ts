@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
     .eq(`api_key_${environment}`, apiKey)
     .maybeSingle()
 
-    console.log(project, projectError, apiKey, supabase, await supabase.from('projects').select('*'))
+    console.log(origin)
 
   if (projectError || !project) {
     throw createError({ statusCode: 403, statusMessage: 'Invalid API key' })
