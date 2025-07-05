@@ -33,6 +33,8 @@ export default defineEventHandler(async (event) => {
     .eq(`api_key_${environment}`, apiKey)
     .maybeSingle()
 
+    console.log(project, projectError, apiKey)
+
   if (projectError || !project) {
     throw createError({ statusCode: 403, statusMessage: 'Invalid API key' })
   }
