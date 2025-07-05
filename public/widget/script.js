@@ -18,7 +18,7 @@ const bootstrapWidget = async (apiKey) => {
     if (!result.valid) return null;
 
     return {
-      projectId: result.projectId,
+      apiKey: apiKey,
       environment: result.environment,
       settings: result.settings,
     };
@@ -183,8 +183,7 @@ const renderWidget = (apiKey) => {
   const container = document.createElement("div");
   container.className = "tellthedev-widget-container";
   const iframe = document.createElement("iframe");
-  iframe.src = `${config.baseUrl}/iframe.html`;
-  // container.appendChild(iframe)
+  iframe.src = `./iframe.html`;
 
   // Iframe resizing
   window.addEventListener("message", (event) => {
@@ -217,7 +216,7 @@ const renderWidget = (apiKey) => {
       }
     } else {
       console.log(
-        "[TellTheDev] Invalid or missing projectId. Widget not rendered."
+        "[TellTheDev] Invalid or missing API Key. Widget not rendered."
       );
 
       let errorContainer = shadowRoot.querySelector(
